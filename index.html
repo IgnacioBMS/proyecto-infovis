@@ -3,59 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico interactivo de coches</title>
+    <title>Gráfico Interactivo</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlaza el CSS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            grid-template-columns: 1fr 1fr;
-            height: 100vh;
-            grid-gap: 10px;
-        }
-        .header {
-            grid-column: 1 / 3;
-            background-color: #f0f0f0;
-            text-align: center;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-        }
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 20px; /* Espacio alrededor del título */
-            flex: 1; /* Para que ocupe el espacio disponible */
-        }
-        .info {
-            background-color: #d0e0f0;
-            padding: 20px;
-        }
-        .graphic {
-            background-color: #f0d0d0;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        #chart-container {
-            width: 100%;
-        }
-        #line-chart {
-            max-width: 100%;
-        }
-        select {
-            margin-left: 10px; /* Espacio a la izquierda del select */
+            background-image: url('logo.png'); /* Ruta a tu imagen */
+            background-size: cover; /* Ajusta la imagen al tamaño de la ventana */
+            background-position: center; /* Centra la imagen */
+            background-repeat: no-repeat; /* No repite la imagen */
+            height: 100vh; /* Altura completa de la ventana */
+            margin: 0; /* Sin márgenes */
+            color: white; /* Cambia el color del texto si es necesario */
+            display: flex; /* Flexbox para centrar el contenido */
+            flex-direction: column; /* Dirección de la columna */
+            justify-content: center; /* Centra verticalmente */
+            align-items: center; /* Centra horizontalmente */
         }
 
-        /* Estilos para los botones con efecto de pulsación */
+        /* Estilos para el botón con efecto de pulsación */
         .pulse-effect {
             border: none;
             color: white;
@@ -64,6 +31,7 @@
             border-radius: 5px;
             background-color: #007bff; /* Color base del botón */
             transition: transform 0.3s ease-in-out; /* Transición suave del efecto de pulsación */
+            margin-bottom: 20px; /* Espacio entre el botón y el gráfico */
         }
 
         .pulse-effect:hover {
@@ -73,52 +41,71 @@
         .pulse-effect:active {
             transform: scale(0.90); /* Reduce ligeramente el tamaño del botón cuando se hace clic */
         }
-        
-        .logo {
-            width: 50px; /* Ajusta el tamaño del logo según sea necesario */
-            height: auto;
-            margin-right: 10px; /* Espacio a la derecha del logo */
+
+        /* Estilos para el gráfico */
+        canvas {
+            max-width: 600px; /* Limitar el ancho del gráfico */
+            max-height: 400px; /* Limitar la altura del gráfico */
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Cabecera con título, logo y selector -->
-        <div class="header">
-            <img src="logo.jpg" alt="Logo" class="logo"> <!-- Asegúrate de cambiar 'logo.png' por la ruta de tu logo -->
-            <div class="title">Gráficos de autos</div>
-            <label for="category-select">Selecciona la categoría:</label>
-            <select id="category-select" class="pulse-effect">
-                <option value="Batery">Batería</option>
-                <option value="Acceleration">Aceleración</option>
-                <option value="TopSpeed">Velocidad Máxima</option>
-                <option value="Range">Autonomía</option>
-                <option value="Efficiency">Eficiencia</option>
-                <option value="NumberofSeats">Número de asientos</option>
-            </select>
-        </div>
-        <div class="info">
-            A - Selecciona una categoría para graficar en el eje Y.
-        </div>
-        <div class="graphic">
-            <div id="chart-container">
-                <canvas id="line-chart"></canvas>
-            </div>
-        </div>
-    </div>
+    <h1>Gráfico Interactivo</h1>
+    <label for="category-select">Selecciona la categoría:</label>
+    <select id="category-select" class="pulse-effect">
+        <option value="Batery">Batería</option>
+        <option value="Acceleration">Aceleración</option>
+        <option value="TopSpeed">Velocidad Máxima</option>
+        <option value="Range">Autonomía</option>
+        <option value="Efficiency">Eficiencia</option>
+        <option value="NumberofSeats">Número de asientos</option>
+    </select>
+
+    <canvas id="line-chart"></canvas>
 
     <script>
-        let chart;  // Para mantener referencia al gráfico
+        // Cargar el CSV
+        Papa.parse('database.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const data = results.data.map(item => {
+                    return {
+                        Name: item.Name,
+                        Price: parseInt(item.PriceinEurope), // Asegúrate de convertir a número
+                        Batery: parseFloat(item.Batery),
+                        Acceleration: parseFloat(item.Acceleration),
+                        TopSpeed: parseFloat(item.TopSpeed),
+                        Range: parseFloat(item.Range),
+                        Efficiency: parseFloat(item.Efficiency),
+                        NumberofSeats: parseInt(item.NumberofSeats),
+                    };
+                });
 
-        // Función para actualizar el gráfico según la categoría seleccionada
+                const categorySelect = document.getElementById('category-select');
+                categorySelect.addEventListener('change', function() {
+                    actualizarGrafico(categorySelect.value, data);
+                });
+
+                // Inicializa el gráfico con la primera categoría
+                actualizarGrafico(categorySelect.value, data);
+            },
+            error: function(err) {
+                console.error('Error al cargar el archivo CSV:', err);
+            }
+        });
+
         function actualizarGrafico(categoria, data) {
             const precios = data.map(item => item.Price); // Obtiene los precios
             const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
 
-            // Crear el gráfico
             const ctx = document.getElementById('line-chart').getContext('2d');
-            const chart = new Chart(ctx, {
+            if (window.chart) {
+                window.chart.destroy(); // Destruye el gráfico anterior
+            }
+
+            window.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: precios, // Precios en el eje X
@@ -149,39 +136,6 @@
                 }
             });
         }
-
-
-        // Cargar el archivo CSV automáticamente
-        // Cargar el CSV
-        Papa.parse('database.csv', {
-            download: true,
-            header: true,
-            complete: function(results) {
-                // Procesar los datos
-                const data = results.data.map(item => {
-                    return {
-                        Name: item.Name,
-                        Price: parseInt(item.PriceinEurope), // Asegúrate de convertir a número
-                        // Convierte otros campos si es necesario
-                        Batery: parseFloat(item.Batery),
-                        Acceleration: parseFloat(item.Acceleration),
-                        TopSpeed: parseFloat(item.TopSpeed),
-                        Range: parseFloat(item.Range),
-                        Efficiency: parseFloat(item.Efficiency),
-                        NumberofSeats: parseInt(item.NumberofSeats),
-                    };
-                });
-
-                // Aquí puedes actualizar el gráfico
-                actualizarGrafico(categorySelect.value, data);
-            },
-            error: function(err) {
-                console.error('Error al cargar el archivo CSV:', err);
-            }
-        });
-
-
     </script>
-
 </body>
 </html>
