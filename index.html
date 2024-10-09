@@ -112,29 +112,19 @@
         let chart;  // Para mantener referencia al gráfico
 
         // Función para actualizar el gráfico según la categoría seleccionada
-        function actualizarGrafico(category, data) {
-            const prices = [];
-            const values = [];
+        function actualizarGrafico(categoria, data) {
+            const precios = data.map(item => item.Price); // Obtiene los precios
+            const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
 
-            data.forEach(row => {
-                prices.push(parseFloat(row['PriceinEurope']));
-                values.push(parseFloat(row[category]));
-            });
-
-            // Si el gráfico ya existe, lo destruimos antes de crear uno nuevo
-            if (chart) {
-                chart.destroy();
-            }
-
-            // Crear el gráfico de líneas
+            // Crear el gráfico
             const ctx = document.getElementById('line-chart').getContext('2d');
-            chart = new Chart(ctx, {
+            const chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: prices,
+                    labels: precios, // Precios en el eje X
                     datasets: [{
-                        label: `Relación Precio vs ${category}`,
-                        data: values,
+                        label: categoria,
+                        data: valores, // Datos de la categoría en el eje Y
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 2,
                         fill: false
@@ -146,13 +136,13 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Precio en Europa (€)'
+                                text: 'Precio en Europa'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: category
+                                text: categoria
                             }
                         }
                     }
@@ -160,30 +150,36 @@
             });
         }
 
+
         // Cargar el archivo CSV automáticamente
-        fetch('database.csv')
-        .then(response => response.text())
-        .then(csvText => {
-            Papa.parse(csvText, {
-                complete: function(results) {
-                    const data = results.data;
-                    const categorySelect = document.getElementById('category-select');
+        // Cargar el CSV
+        Papa.parse('database.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                // Procesar los datos
+                const data = results.data.map(item => {
+                    return {
+                        Name: item.Name,
+                        Price: parseInt(item.PriceinEurope), // Asegúrate de convertir a número
+                        // Convierte otros campos si es necesario
+                        Batery: parseFloat(item.Batery),
+                        Acceleration: parseFloat(item.Acceleration),
+                        TopSpeed: parseFloat(item.TopSpeed),
+                        Range: parseFloat(item.Range),
+                        Efficiency: parseFloat(item.Efficiency),
+                        NumberofSeats: parseInt(item.NumberofSeats),
+                    };
+                });
 
-                    // Generar el gráfico inicial con la categoría por defecto
-                    actualizarGrafico(categorySelect.value, data);
-
-                    // Actualizar el gráfico cuando se cambie la categoría en el select
-                    categorySelect.addEventListener('change', function() {
-                        actualizarGrafico(this.value, data);
-                    });
-                },
-                header: true,
-                skipEmptyLines: true
-            });
-        })
-        .catch(error => {
-            console.error('Error al cargar el archivo CSV:', error);
+                // Aquí puedes actualizar el gráfico
+                actualizarGrafico(categorySelect.value, data);
+            },
+            error: function(err) {
+                console.error('Error al cargar el archivo CSV:', err);
+            }
         });
+
 
     </script>
 
