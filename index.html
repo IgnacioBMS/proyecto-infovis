@@ -36,6 +36,7 @@
         .info {
             background-color: #ffffff;
             padding: 20px;
+            overflow-y: auto; /* Agrega scroll si hay muchos datos */
         }
         .graphic {
             background-color: #ffffff;
@@ -79,6 +80,20 @@
             height: auto;
             margin-right: 10px; /* Espacio a la derecha del logo */
         }
+
+        /* Estilos para la lista de autos */
+        .car-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .car-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -98,9 +113,13 @@
                 <option value="NumberofSeats">Número de asientos</option>
             </select>
         </div>
+
+        <!-- Información de los autos -->
         <div class="info">
-            info
+            <ul id="car-list" class="car-list"></ul>
         </div>
+
+        <!-- Gráfico de autos -->
         <div class="graphic">
             <div id="chart-container">
                 <canvas id="line-chart"></canvas>
@@ -113,6 +132,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const categorySelect = document.getElementById('category-select');
+            const carList = document.getElementById('car-list'); // Elemento donde se mostrará la lista de autos
 
             // Cargar el CSV
             Papa.parse('database.csv', {
@@ -140,6 +160,9 @@
                     categorySelect.addEventListener('change', function() {
                         actualizarGrafico(this.value, data);
                     });
+
+                    // Mostrar la lista de autos
+                    actualizarListaAutos(data);
                 },
                 error: function(err) {
                     console.error('Error al cargar el archivo CSV:', err);
@@ -187,6 +210,27 @@
                             }
                         }
                     }
+                });
+            }
+
+            // Función para actualizar la lista de autos
+            function actualizarListaAutos(data) {
+                carList.innerHTML = ''; // Limpiar la lista
+
+                // Iterar sobre los datos y crear los elementos de la lista
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <strong>${item.Name}</strong><br>
+                        Batería: ${item.Batery} kWh<br>
+                        Aceleración: ${item.Acceleration} s<br>
+                        Velocidad Máxima: ${item.TopSpeed} km/h<br>
+                        Autonomía: ${item.Range} km<br>
+                        Eficiencia: ${item.Efficiency} Wh/km<br>
+                        Número de asientos: ${item.NumberofSeats}<br>
+                        Precio: €${item.Price.toLocaleString()}
+                    `;
+                    carList.appendChild(listItem);
                 });
             }
         });
