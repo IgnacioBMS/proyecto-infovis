@@ -72,6 +72,7 @@
 
                     // Añadir un listener para cambios en el select
                     categorySelect.addEventListener('change', function() {
+                        console.log(this.value)
                         actualizarGrafico(this.value, data);
                     });
 
