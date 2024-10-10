@@ -85,6 +85,7 @@
 
             // Función para actualizar el gráfico según la categoría seleccionada
             function actualizarGrafico(categoria, data) {
+                console.log(data)
                 const precios = data.map(item => item.Price); // Obtiene los precios
                 const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
 
