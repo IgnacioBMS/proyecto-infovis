@@ -1,4 +1,4 @@
-Name,Battery kWh,Acceleration sec,TopSpeed km/h,Range km,Efficiency Wh/km,NumberofSeats,PriceinEurope,Score
+Name,Battery_kWh,Acceleration_sec,TopSpeed_kmh,Range_km,Efficiency_Whkm,NumberofSeats,PriceinEurope,Score
 Nissan Leaf ,36.0,7.9,144.0,220.0,164.0,5,29990,0.41045946197142114
 Porsche Taycan Turbo S,83.7,2.8,260.0,390.0,215.0,4,186336,0.4022497551381511
 Nissan e-NV200 Evalia ,36.0,14.0,123.0,165.0,218.0,7,43433,0.31406353782386603

@@ -17,11 +17,11 @@
             <div class="title">Gráficos de autos</div>
             <label for="category-select">Selecciona la categoría:</label>
             <select id="category-select" class="pulse-effect">
-                <option value="Battery kWh">Batería</option>
-                <option value="Acceleration sec">Aceleración</option>
-                <option value="TopSpeed km/h">Velocidad Máxima</option>
-                <option value="Range km">Autonomía</option>d
-                <option value="Efficiency Wh/km">Eficiencia</option>
+                <option value="Battery_kWh">Batería</option>
+                <option value="Acceleration_sec">Aceleración</option>
+                <option value="TopSpeed_km/h">Velocidad Máxima</option>
+                <option value="Range_km">Autonomía</option>d
+                <option value="Efficiency_Wh/km">Eficiencia</option>
                 <option value="NumberofSeats">Número de asientos</option>
                 <option value="Score">Puntuación</option>
             </select>
@@ -57,11 +57,11 @@
                         return {
                             Name: item.Name,
                             Price: parseInt(item.PriceinEurope), // Convertir a número
-                            Batery: parseFloat(item.Batery),
-                            Acceleration: parseFloat(item.Acceleration),
-                            TopSpeed: parseFloat(item.TopSpeed),
-                            Range: parseFloat(item.Range),
-                            Efficiency: parseFloat(item.Efficiency),
+                            Batery: parseFloat(item.Battery_kWh),
+                            Acceleration: parseFloat(item.Acceleration_sec),
+                            TopSpeed: parseFloat(item.TopSpeed_kmh),
+                            Range: parseFloat(item.Range_km),
+                            Efficiency: parseFloat(item.Efficiency_Whkm),
                             NumberofSeats: parseInt(item.NumberofSeats),
                             Score: parseFloat(item.Score),
                         };
