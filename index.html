@@ -137,11 +137,11 @@
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
                         <strong>${item.Name}</strong><br>
-                        Batería: ${item.Batery} kWh<br>
-                        Aceleración: ${item.Acceleration} s<br>
-                        Velocidad Máxima: ${item.TopSpeed} km/h<br>
-                        Autonomía: ${item.Range} km<br>
-                        Eficiencia: ${item.Efficiency} Wh/km<br>
+                        Batería: ${item.Battery_kWh} kWh<br>
+                        Aceleración: ${item.Acceleration_sec} s<br>
+                        Velocidad Máxima: ${item.TopSpeed_kmh} km/h<br>
+                        Autonomía: ${item.Range_km} km<br>
+                        Eficiencia: ${item.Efficiency_Whkm} Wh/km<br>
                         Número de asientos: ${item.NumberofSeats}<br>
                         Precio: €${item.Price.toLocaleString()}
                     `;
