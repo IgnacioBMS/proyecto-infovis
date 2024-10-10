@@ -54,14 +54,14 @@
                     // Procesar los datos
                     const data = results.data.map(item => {
                         return {
-                            Name: item.Name,
-                            Price: parseInt(item.PriceinEurope), // Convertir a número
-                            Batery: parseFloat(item.Batery),
-                            Acceleration: parseFloat(item.Acceleration),
-                            TopSpeed: parseFloat(item.TopSpeed),
-                            Range: parseFloat(item.Range),
-                            Efficiency: parseFloat(item.Efficiency),
-                            NumberofSeats: parseInt(item.NumberofSeats),
+                            Name: item.Name.trim(), // Elimina espacios en blanco alrededor del nombre
+                            Price: parseInt(item.PriceinEurope.replace(/[€,.]/g, '')) || 0, // Elimina € y puntos/comas, convierte a int
+                            Batery: parseFloat(item.Batery.replace(/[^\d.-]/g, '')) || 0,  // Limpia caracteres no numéricos
+                            Acceleration: parseFloat(item.Acceleration.replace(/[^\d.-]/g, '')) || 0,
+                            TopSpeed: parseFloat(item.TopSpeed.replace(/[^\d.-]/g, '')) || 0,
+                            Range: parseFloat(item.Range.replace(/[^\d.-]/g, '')) || 0,
+                            Efficiency: parseFloat(item.Efficiency.replace(/[^\d.-]/g, '')) || 0,
+                            NumberofSeats: parseInt(item.NumberofSeats.replace(/[^\d.-]/g, '')) || 0
                         };
                     });
 
