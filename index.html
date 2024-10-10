@@ -17,12 +17,13 @@
             <div class="title">Gráficos de autos</div>
             <label for="category-select">Selecciona la categoría:</label>
             <select id="category-select" class="pulse-effect">
-                <option value="Batery">Batería</option>
-                <option value="Acceleration">Aceleración</option>
-                <option value="TopSpeed">Velocidad Máxima</option>
-                <option value="Range">Autonomía</option>
-                <option value="Efficiency">Eficiencia</option>
+                <option value="Battery kWh">Batería</option>
+                <option value="Acceleration sec">Aceleración</option>
+                <option value="TopSpeed km/h">Velocidad Máxima</option>
+                <option value="Range km">Autonomía</option>d
+                <option value="Efficiency Wh/km">Eficiencia</option>
                 <option value="NumberofSeats">Número de asientos</option>
+                <option value="Score">Puntuación</option>
             </select>
         </div>
 
@@ -54,14 +55,15 @@
                     // Procesar los datos
                     const data = results.data.map(item => {
                         return {
-                            Name: item.Name.trim(), // Elimina espacios en blanco alrededor del nombre
-                            Price: parseInt(item.PriceinEurope.replace(/[€,.]/g, '')) || 0, // Elimina € y puntos/comas, convierte a int
-                            Batery: parseFloat(item.Batery.replace(/[^\d.-]/g, '')) || 0,  // Limpia caracteres no numéricos
-                            Acceleration: parseFloat(item.Acceleration.replace(/[^\d.-]/g, '')) || 0,
-                            TopSpeed: parseFloat(item.TopSpeed.replace(/[^\d.-]/g, '')) || 0,
-                            Range: parseFloat(item.Range.replace(/[^\d.-]/g, '')) || 0,
-                            Efficiency: parseFloat(item.Efficiency.replace(/[^\d.-]/g, '')) || 0,
-                            NumberofSeats: parseInt(item.NumberofSeats.replace(/[^\d.-]/g, '')) || 0
+                            Name: item.Name,
+                            Price: parseInt(item.PriceinEurope), // Convertir a número
+                            Batery: parseFloat(item.Batery),
+                            Acceleration: parseFloat(item.Acceleration),
+                            TopSpeed: parseFloat(item.TopSpeed),
+                            Range: parseFloat(item.Range),
+                            Efficiency: parseFloat(item.Efficiency),
+                            NumberofSeats: parseInt(item.NumberofSeats),
+                            Score: parseFloat(item.Score),
                         };
                     });
 
