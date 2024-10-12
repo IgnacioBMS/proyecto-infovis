@@ -63,7 +63,7 @@
                             Range_km: parseFloat(item.Range_km),
                             Efficiency_Whkm: parseFloat(item.Efficiency_Whkm),
                             NumberofSeats: parseInt(item.NumberofSeats),
-                            Score: parseFloat(item.Score),
+                            Score: Math.trunc(parseFloat(item.Score) * 100),
                         };
                     });
 
@@ -158,7 +158,7 @@
                         Autonomía: ${item.Range_km} km<br>
                         Eficiencia: ${item.Efficiency_Whkm} Wh/km<br>
                         Número de asientos: ${item.NumberofSeats}<br>
-                        Puntuación: ${item.Score}$<br>
+                        Puntuación: ${item.Score}<br>
                         Precio: €${item.Price.toLocaleString()}
                     `;
                     carList.appendChild(listItem);
