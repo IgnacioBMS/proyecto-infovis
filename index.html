@@ -87,8 +87,9 @@
             // Función para actualizar el gráfico según la categoría seleccionada
             function actualizarGrafico(categoria, data) {
                 const precios = data.map(item => item.Price); // Obtiene los precios
+                const nombres = data.map(item => item.Name); // Obtiene los nombres de los autos
                 const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
-                console.log(valores)
+
                 // Si ya existe un gráfico, destrúyelo antes de crear uno nuevo
                 if (chart) {
                     chart.destroy();
@@ -99,13 +100,15 @@
                 chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: precios, // Precios en el eje X
+                        labels: nombres, // Usar los nombres de los autos en el eje X
                         datasets: [{
                             label: categoria,
                             data: valores, // Datos de la categoría en el eje Y
                             borderColor: 'rgba(75, 192, 192, 1)',
                             borderWidth: 2,
-                            fill: false
+                            fill: false,
+                            hoverBackgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            hoverBorderColor: 'rgba(255, 99, 132, 1)',
                         }]
                     },
                     options: {
@@ -114,13 +117,25 @@
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Precio en Europa'
+                                    text: 'Autos'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
                                     text: categoria
+                                }
+                            }
+                        },
+                        // Personalización del tooltip para mostrar el nombre del auto y el precio
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        const auto = nombres[tooltipItem.dataIndex]; // Nombre del auto
+                                        const precio = precios[tooltipItem.dataIndex]; // Precio del auto
+                                        return `${auto}: €${precio.toLocaleString()}`; // Mostrar nombre y precio formateado
+                                    }
                                 }
                             }
                         }
@@ -143,6 +158,7 @@
                         Autonomía: ${item.Range_km} km<br>
                         Eficiencia: ${item.Efficiency_Whkm} Wh/km<br>
                         Número de asientos: ${item.NumberofSeats}<br>
+                        Puntuación: ${item.Score}$<br>
                         Precio: €${item.Price.toLocaleString()}
                     `;
                     carList.appendChild(listItem);
