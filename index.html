@@ -134,8 +134,11 @@
                                     label: function(tooltipItem) {
                                         const auto = nombres[tooltipItem.dataIndex]; // Nombre del auto
                                         const precio = precios[tooltipItem.dataIndex]; // Precio del auto
-                                        const yValue = tooltipItem.raw; // Valor del eje Y
                                         return `${auto}: €${precio.toLocaleString()}`; // Mostrar nombre y precio formateado
+                                    },
+                                    title: function(tooltipItem) {
+                                        const yValue = tooltipItem.raw; // Valor del eje Y
+                                        return `${yValue}`; // Muestra el valor del eje Y
                                     }
                                 }
                             }
