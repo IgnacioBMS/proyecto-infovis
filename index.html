@@ -131,14 +131,17 @@
                         plugins: {
                             tooltip: {
                                 callbacks: {
-                                    label: function(tooltipItem) {
-                                        const auto = nombres[tooltipItem.dataIndex]; // Nombre del auto
-                                        const precio = precios[tooltipItem.dataIndex]; // Precio del auto
-                                        return `${auto}: €${precio.toLocaleString()}`; // Mostrar nombre y precio formateado
+                                    // El título el valor del eje Y (el dato graficado)
+                                    title: function(context) {
+                                        const valor = context[0].raw; // Obtener el valor del eje Y
+                                        return valor.toFixed(2); // Muestra el valor del eje Y como título
                                     },
-                                    title: function(tooltipItem) {
-                                        const yValue = tooltipItem.raw; // Valor del eje Y
-                                        return `${yValue}`; // Muestra el valor del eje Y
+                                    // La etiqueta el nombre del auto y su precio
+                                    label: function(context) {
+                                        const index = context.dataIndex;
+                                        const name = data[index].Name; // Obtener el nombre del auto
+                                        const price = context.label; // Obtener el precio (eje X)
+                                        return `${name}: €${parseFloat(price).toLocaleString()}`;
                                     }
                                 }
                             }
