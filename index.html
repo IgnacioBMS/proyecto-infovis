@@ -117,7 +117,7 @@
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Autos'
+                                    text: 'Precio en Europa'
                                 }
                             },
                             y: {
@@ -134,6 +134,7 @@
                                     label: function(tooltipItem) {
                                         const auto = nombres[tooltipItem.dataIndex]; // Nombre del auto
                                         const precio = precios[tooltipItem.dataIndex]; // Precio del auto
+                                        const yValue = context.raw; // Valor del eje Y
                                         return `${auto}: €${precio.toLocaleString()}`; // Mostrar nombre y precio formateado
                                     }
                                 }
