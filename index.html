@@ -11,11 +11,16 @@
 <body>
 
     <div class="container">
-        <div class="header">
-            <img src="imagenes/logo.jpg" alt="Logo" class="logo"> 
-            <div class="title">Autos Electricos</div>
-            <label for="category-select">Selecciona la categoría:</label>
-            <select id="category-select" class="pulse-effect">
+        <!-- Header con logo, título y selección de categoría -->
+        <div class="logo" id="logo">
+            <img src="imagenes/logo.jpg" alt="Logo">
+        </div>
+        <div class="title" id="title">
+            Autos Eléctricos
+        </div>
+        <div class="category-select" id="category-select">
+            <label for="category">Selecciona la categoría:</label>
+            <select id="category">
                 <option value="Battery_kWh">Batería</option>
                 <option value="Acceleration_sec">Aceleración</option>
                 <option value="TopSpeed_kmh">Velocidad Máxima</option>
@@ -26,157 +31,25 @@
             </select>
         </div>
 
-        <div class="main-content">
-            <!-- Columna de contexto -->
-            <div class="contexto">
-                <h2>Compre los autos eléctricos más baratos de Europa! Váyase verde y ayude a salvar el planeta a los mejores precios! Bueno, Bonito, Barato, y Berde</h2> 
+        <!-- Columna de contexto -->
+        <div class="context" id="context">
+            <h2>Compre los autos eléctricos más baratos de Europa! Váyase verde y ayude a salvar el planeta a los mejores precios! Bueno, Bonito, Barato, y Berde</h2> 
                 <p>En esta página encontrarás una comparación detallada entre el precio de distintos modelos de autos eléctricos y sus características clave de rendimiento, como la capacidad de la batería, aceleración, velocidad máxima y más. Nuestro objetivo es brindarte una herramienta que te permita evaluar fácilmente cómo el costo de cada vehículo se relaciona con sus especificaciones técnicas, ayudándote a tomar decisiones informadas al momento de elegir el auto eléctrico que mejor se ajuste a tus necesidades.</p>
-                <p>Cada gráfico te permitirá visualizar cómo varían los precios en función de distintos atributos de rendimiento, dándote una visión completa de las opciones disponibles en el mercado. Esta información te será útil si deseas encontrar el equilibrio ideal entre el costo y las prestaciones de los vehículos eléctricos actuales.</p>
-            </div>
-            <!-- Columna de gráfico -->
-            <div class="graphic">
-                <h3>Seleccione el punto para ver más detalles</h3>
-                <div id="chart-container">
-                    <canvas id="line-chart"></canvas>
-                </div>
+        </div>
 
-                <!-- Contenedor para mostrar las especificaciones del auto -->
-                <div id="car-details" class="car-details">
-                    <h4>Detalles del Auto</h4>
-                    <p id="car-specs"></p>
-                </div>
-            </div>
+        <!-- Columna de gráfico -->
+        <div class="chart-container" id="chart-container">
+            <h3>Seleccione un punto para ver más información</h3>
+            <canvas id="line-chart"></canvas>
+        </div>
+
+        <!-- Contenedor de detalles del auto -->
+        <div class="car-details" id="car-details">
+            <h3>Detalles del Auto</h3>
+            <p id="car-specs"></p>
         </div>
     </div>
 
-    <script>
-        let chart;  // Para mantener referencia al gráfico
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
-            const carSpecs = document.getElementById('car-specs'); // Donde se mostrarán las especificaciones
-
-            // Cargar el CSV
-            Papa.parse('datos/database.csv', {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    const data = results.data.map(item => {
-                        return {
-                            Name: item.Name,
-                            Price: parseInt(item.PriceinEurope), // Convertir a número
-                            Battery_kWh: parseFloat(item.Battery_kWh),
-                            Acceleration_sec: parseFloat(item.Acceleration_sec),
-                            TopSpeed_kmh: parseFloat(item.TopSpeed_kmh),
-                            Range_km: parseFloat(item.Range_km),
-                            Efficiency_Whkm: parseFloat(item.Efficiency_Whkm),
-                            NumberofSeats: parseInt(item.NumberofSeats),
-                            Score: Math.trunc(parseFloat(item.Score) * 100),
-                        };
-                    });
-
-                    // Inicializar el gráfico con la categoría por defecto
-                    actualizarGrafico('Battery_kWh', data);
-
-                    // Agregar un evento para cambiar el gráfico cuando se seleccione una nueva categoría
-                    const categorySelect = document.getElementById('category-select');
-                    categorySelect.addEventListener('change', function() {
-                        const categoria = categorySelect.value;
-                        actualizarGrafico(categoria, data); // Actualiza el gráfico con la nueva categoría seleccionada
-                    });
-                },
-                error: function(err) {
-                    console.error('Error al cargar el archivo CSV:', err);
-                }
-            });
-
-            // Función para actualizar el gráfico según la categoría seleccionada
-            function actualizarGrafico(categoria, data) {
-                const precios = data.map(item => item.Price); // Obtiene los precios
-                const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
-
-                // Si ya existe un gráfico, destrúyelo antes de crear uno nuevo
-                if (chart) {
-                    chart.destroy();
-                }
-
-                // Crear el gráfico
-                const ctx = document.getElementById('line-chart').getContext('2d');
-                chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: precios, // Usar los precio de los autos en el eje X
-                        datasets: [{
-                            label: categoria,
-                            data: valores, // Datos de la categoría en el eje Y
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 2,
-                            fill: false,
-                            hoverBackgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            hoverBorderColor: 'rgba(255, 99, 132, 1)',
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Precio en Europa'
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: categoria
-                                }
-                            }
-                        },
-                        // Personalización del tooltip para mostrar el nombre del auto y el precio
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    // El título el valor del eje Y (el dato graficado)
-                                    title: function(context) {
-                                        const valor = context[0].raw; // Obtener el valor del eje Y
-                                        return valor.toFixed(2); // Muestra el valor del eje Y como título
-                                    },
-                                    // La etiqueta el nombre del auto y su precio
-                                    label: function(context) {
-                                        const index = context.dataIndex;
-                                        const name = data[index].Name; // Obtener el nombre del auto
-                                        const price = context.label; // Obtener el precio (eje X)
-                                        return `${name}: €${parseFloat(price).toLocaleString()}`;
-                                    }
-                                }
-                            }
-                        },
-                        // Al hacer clic en un punto del gráfico, mostrar los detalles del auto
-                        onClick: function(e, item) {
-                            if (item.length > 0) {
-                                const index = item[0].index; // Obtener el índice del auto
-                                const car = data[index]; // Obtener los datos del auto
-
-                                // Mostrar las especificaciones del auto
-                                carDetails.style.display = 'block'; // Hacer visible el contenedor
-                                carSpecs.innerHTML = `
-                                    <strong>Nombre:</strong> ${car.Name}<br>
-                                    <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
-                                    <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
-                                    <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
-                                    <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
-                                    <strong>Autonomía:</strong> ${car.Range_km} km<br>
-                                    <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
-                                    <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
-                                    <strong>Puntuación:</strong> ${car.Score}<br>
-                                `;
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
