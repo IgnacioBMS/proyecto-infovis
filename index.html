@@ -14,18 +14,30 @@
         <!-- Cabecera con título, logo y selector -->
         <div class="header">
             <img src="logo.jpg" alt="Logo" class="logo"> <!-- Asegúrate de cambiar 'logo.jpg' por la ruta de tu logo -->
-            <div class="title">Gráficos de autos</div>
+            <div class="title">Escoja su Auto en función de . . . </div>
             <label for="category-select">Selecciona la categoría:</label>
             <select id="category-select" class="pulse-effect">
                 <option value="Battery_kWh">Batería</option>
                 <option value="Acceleration_sec">Aceleración</option>
                 <option value="TopSpeed_kmh">Velocidad Máxima</option>
                 <option value="Range_km">Autonomía</option>d
-                <option value="Efficiency_Whkm">Eficiencia</option>
+                <option value="Efficiency_Whkm">Gasto</option>
                 <option value="NumberofSeats">Número de asientos</option>
                 <option value="Score">Puntuación</option>
             </select>
         </div>
+
+        </div class='contexto'>
+        <h1>Comparación de Precios y Rendimiento de Autos Eléctricos</h1> 
+        <p>En esta página encontrarás una comparación detallada entre el precio de distintos modelos de autos eléctricos y sus características clave de
+            rendimiento, como la capacidad de la batería, aceleración, velocidad máxima y más. Nuestro objetivo es brindarte una herramienta que te 
+            permita evaluar fácilmente cómo el costo de cada vehículo se relaciona con sus especificaciones técnicas, ayudándote a tomar decisiones 
+            informadas al momento de elegir el auto eléctrico que mejor se ajuste a tus necesidades.</p>
+        <P>Cada gráfico te permitirá visualizar cómo varían los precios en función de distintos atributos de rendimiento, dándote una visión completa 
+            de las opciones disponibles en el mercado. Esta información te será útil si deseas encontrar el equilibrio ideal entre el costo y las 
+            prestaciones de los vehículos eléctricos actuales.</P>
+        </div>
+
 
         <!-- Información de los autos -->
         <div class="info">
@@ -163,7 +175,7 @@
                         Aceleración: ${item.Acceleration_sec} s<br>
                         Velocidad Máxima: ${item.TopSpeed_kmh} km/h<br>
                         Autonomía: ${item.Range_km} km<br>
-                        Eficiencia: ${item.Efficiency_Whkm} Wh/km<br>
+                        Gasto: ${item.Efficiency_Whkm} Wh/km<br>
                         Número de asientos: ${item.NumberofSeats}<br>
                         Puntuación: ${item.Score}<br>
                         Precio: €${item.Price.toLocaleString()}
