@@ -13,7 +13,7 @@
     <div class="container">
         <!-- Cabecera con título, logo y selector -->
         <div class="header">
-            <img src="logo.jpg" alt="Logo" class="logo"> <!-- Asegúrate de cambiar 'logo.jpg' por la ruta de tu logo -->
+            <img src="imagenes/logo.jpg" alt="Logo" class="logo"> <!-- Asegúrate de cambiar 'logo.jpg' por la ruta de tu logo -->
             <div class="title">Escoja su Auto en función de . . . </div>
             <label for="category-select">Selecciona la categoría:</label>
             <select id="category-select" class="pulse-effect">
@@ -60,7 +60,7 @@
             const carList = document.getElementById('car-list'); // Elemento donde se mostrará la lista de autos
 
             // Cargar el CSV
-            Papa.parse('database.csv', {
+            Papa.parse('datos/database.csv', {
                 download: true,
                 header: true,
                 complete: function(results) {
