@@ -5,54 +5,45 @@ body {
 }
 .container {
     display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; /* Tres columnas iguales */
+    grid-template-rows: auto 1fr; /* Cabecera y el contenido principal */
     height: 100vh;
-    grid-gap: 10px;
+    gap: 10px;
 }
 
 .header {
-    grid-column: 1 / 3;
+    grid-column: 1 / 4; /* La cabecera ocupa todo el ancho */
     background-color: #FF9966;
     text-align: center;
     padding: 20px;
     display: flex;
     align-items: center;
 }
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0 20px; /* Espacio alrededor del título */
-    flex: 1; /* Para que ocupe el espacio disponible */
-}
-.contexto{
+
+.contexto, .info, .graphic {
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #f7f7f7;
-    border-radius:  5px;
-    margin-bottom: 20px;
+    border-radius: 5px;
 }
-.contexto h1 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+
+.contexto {
+    grid-column: 1; /* Primera columna */
 }
-.contexto p {
-    font-size: 1em;
-    line-height: 1.6;
-}
+
 .info {
-    background-color: #ffffff;
-    padding: 20px;
-    overflow-y: auto; /* Agrega scroll si hay muchos datos */
+    grid-column: 2; /* Segunda columna */
+    overflow-y: auto; /* Scroll en caso de muchos datos */
 }
+
 .graphic {
-    background-color: #ffffff;
-    padding: 20px;
+    grid-column: 3; /* Tercera columna */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
+
 #chart-container {
     width: 100%;
 }
