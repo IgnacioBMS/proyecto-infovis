@@ -1,58 +1,113 @@
 /* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f4f4f9;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     padding: 20px;
 }
 
-.contexto {
+.container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header .logo {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.header .title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.header select {
+    padding: 8px 15px;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.pulse-effect {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Main content with two columns */
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 .contexto {
     flex: 1;
     padding: 20px;
     background-color: #fff;
-    margin-right: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .contexto h2 {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 15px;
+    color: #333;
 }
 
 .contexto p {
     font-size: 16px;
     line-height: 1.6;
+    color: #666;
 }
 
 .graphic {
-    width: 100%;
-    max-width: 1000px;
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#chart-container {
+    margin-bottom: 20px;
 }
 
 .car-details {
     margin-top: 20px;
     padding: 15px;
-    background-color: #fff;
+    background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: none; /* Inicialmente oculto */
-    width: 100%;
-    max-width: 1000px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
 .car-details h3 {
@@ -64,4 +119,39 @@ body {
 .car-details p {
     font-size: 16px;
     line-height: 1.6;
+    color: #333;
+}
+
+/* Styling for the select box and the labels */
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}
+
+/* Tooltip styling for the chart */
+.chartjs-tooltip {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contexto, .graphic {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .header select {
+        width: 100%;
+    }
 }
