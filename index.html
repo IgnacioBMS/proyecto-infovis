@@ -75,8 +75,15 @@
                         };
                     });
 
-                    // Inicializar el gráfico
+                    // Inicializar el gráfico con la categoría por defecto
                     actualizarGrafico('Battery_kWh', data);
+
+                    // Agregar un evento para cambiar el gráfico cuando se seleccione una nueva categoría
+                    const categorySelect = document.getElementById('category-select');
+                    categorySelect.addEventListener('change', function() {
+                        const categoria = categorySelect.value;
+                        actualizarGrafico(categoria, data); // Actualiza el gráfico con la nueva categoría seleccionada
+                    });
                 },
                 error: function(err) {
                     console.error('Error al cargar el archivo CSV:', err);
