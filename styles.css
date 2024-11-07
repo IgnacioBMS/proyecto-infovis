@@ -6,11 +6,12 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas con mismo ancho */
+    grid-template-rows: auto 1fr; /* Fila para el encabezado y la otra para el contenido */
     gap: 10px;
     padding: 20px;
     height: 100vh;
+    box-sizing: border-box;
 }
 
 .header {
@@ -109,4 +110,19 @@ select {
     width: 100px;
     height: auto;
     margin-right: 10px;
+}
+
+/* Media query para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Colapsa a una sola columna */
+    }
+
+    .header {
+        grid-column: 1 / 2;
+    }
+
+    .contexto, .info, .graphic {
+        grid-column: 1 / 2; /* Cada sección ocupa el 100% del ancho */
+    }
 }
