@@ -5,45 +5,40 @@ body {
 }
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Tres columnas iguales */
-    grid-template-rows: auto 1fr; /* Cabecera y el contenido principal */
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
     height: 100vh;
-    gap: 10px;
+    grid-gap: 10px;
 }
 
 .header {
-    grid-column: 1 / 4; /* La cabecera ocupa todo el ancho */
+    grid-column: 1 / 3;
     background-color: #FF9966;
     text-align: center;
     padding: 20px;
     display: flex;
     align-items: center;
 }
-
-.contexto, .info, .graphic {
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #f7f7f7;
-    border-radius: 5px;
-}
-
-.contexto {
-    grid-column: 1; /* Primera columna */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 20px; /* Espacio alrededor del título */
+    flex: 1; /* Para que ocupe el espacio disponible */
 }
 
 .info {
-    grid-column: 2; /* Segunda columna */
-    overflow-y: auto; /* Scroll en caso de muchos datos */
+    background-color: #ffffff;
+    padding: 20px;
+    overflow-y: auto; /* Agrega scroll si hay muchos datos */
 }
-
 .graphic {
-    grid-column: 3; /* Tercera columna */
+    background-color: #ffffff;
+    padding: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
-
 #chart-container {
     width: 100%;
 }
