@@ -14,35 +14,7 @@ body {
     padding: 20px;
 }
 
-.header {
-    background-color: #FF9966;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-}
-
-.logo {
-    width: 100px;
-    height: auto;
-    margin-right: 20px;
-}
-
-.header h1 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.header p {
-    font-size: 16px;
-    line-height: 1.6;
-    font-style: italic;
-}
-
-.main-content {
-    display: flex;
-    justify-content: space-between;
+.contexto {
     width: 100%;
     max-width: 1000px;
 }
@@ -68,11 +40,8 @@ body {
 }
 
 .graphic {
-    flex: 1;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 1000px;
 }
 
 .car-details {
@@ -82,6 +51,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: none; /* Inicialmente oculto */
+    width: 100%;
+    max-width: 1000px;
 }
 
 .car-details h3 {
