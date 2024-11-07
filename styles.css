@@ -11,32 +11,43 @@ body {
 .container {
     display: grid;
     grid-template-areas:
-        "logo title category-select"
-        "context chart-container chart-container"
+        "logo title-select title-select"
+        "context chart-section chart-section"
         "context car-details car-details";
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 10px;
+    grid-template-columns: 2fr 3fr 3fr;
+    gap: 20px;
     padding: 20px;
 }
 
 .logo {
     grid-area: logo;
-}
-
-.title {
-    grid-area: title;
-    font-size: 24px;
-    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.logo-img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.title-select {
+    grid-area: title-select;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.title-select h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 .category-select {
-    grid-area: category-select;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
 }
 
 .context {
@@ -45,8 +56,8 @@ body {
     background-color: #f9f9f9;
 }
 
-.chart-container {
-    grid-area: chart-container;
+.chart-section {
+    grid-area: chart-section;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -63,4 +74,10 @@ body {
 
 h2, h3 {
     margin-bottom: 10px;
+}
+
+select {
+    padding: 5px;
+    margin-top: 5px;
+    font-size: 14px;
 }
