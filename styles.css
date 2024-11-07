@@ -32,11 +32,17 @@ body {
     border-radius: 5px;
 }
 
+.contexto {
+    grid-column: 1; /* Primera columna */
+}
+
 .info {
+    grid-column: 2; /* Segunda columna */
     overflow-y: auto; /* Scroll en caso de muchos datos */
 }
 
 .graphic {
+    grid-column: 3; /* Tercera columna */
     display: flex;
     align-items: center;
     justify-content: center;
