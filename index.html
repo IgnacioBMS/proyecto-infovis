@@ -11,68 +11,39 @@
 <body>
 
     <div class="container">
-        <!-- Cabecera con título, logo y selector -->
-        <div class="header">
-            <img src="imagenes/logo.jpg" alt="Logo" class="logo"> 
-            <div class="title">Escoja su Auto en función de . . . </div>
-            <label for="category-select">Selecciona la categoría:</label>
-            <select id="category-select" class="pulse-effect">
-                <option value="Battery_kWh">Batería</option>
-                <option value="Acceleration_sec">Aceleración</option>
-                <option value="TopSpeed_kmh">Velocidad Máxima</option>
-                <option value="Range_km">Autonomía</option>d
-                <option value="Efficiency_Whkm">Gasto</option>
-                <option value="NumberofSeats">Número de asientos</option>
-                <option value="Score">Puntuación</option>
-            </select>
+        <!-- Contexto -->
+        <div class="contexto">
+            <h2>Comparación de Precios y Rendimiento de Autos Eléctricos</h2> 
+            <p>En esta página encontrarás una comparación detallada entre el precio de distintos modelos de autos eléctricos y sus características clave de rendimiento, como la capacidad de la batería, aceleración, velocidad máxima y más. Nuestro objetivo es brindarte una herramienta que te permita evaluar fácilmente cómo el costo de cada vehículo se relaciona con sus especificaciones técnicas, ayudándote a tomar decisiones informadas al momento de elegir el auto eléctrico que mejor se ajuste a tus necesidades.</p>
+            <p>Cada gráfico te permitirá visualizar cómo varían los precios en función de distintos atributos de rendimiento, dándote una visión completa de las opciones disponibles en el mercado. Esta información te será útil si deseas encontrar el equilibrio ideal entre el costo y las prestaciones de los vehículos eléctricos actuales.</p>
         </div>
 
-        <!-- Primera Caja -->
-        <div class="box1">
-            <!-- Contexto -->
-            </div class="contexto">
-                <h2>Comparación de Precios y Rendimiento de Autos Eléctricos</h2> 
-                <p>En esta página encontrarás una comparación detallada entre el precio de distintos modelos de autos eléctricos y sus características clave de
-                    rendimiento, como la capacidad de la batería, aceleración, velocidad máxima y más. Nuestro objetivo es brindarte una herramienta que te 
-                    permita evaluar fácilmente cómo el costo de cada vehículo se relaciona con sus especificaciones técnicas, ayudándote a tomar decisiones 
-                    informadas al momento de elegir el auto eléctrico que mejor se ajuste a tus necesidades.</p>
-                <P>Cada gráfico te permitirá visualizar cómo varían los precios en función de distintos atributos de rendimiento, dándote una visión completa 
-                    de las opciones disponibles en el mercado. Esta información te será útil si deseas encontrar el equilibrio ideal entre el costo y las 
-                    prestaciones de los vehículos eléctricos actuales.</P>
-            </div>
-
-            <!-- Información de los autos -->
-            <div class="info">
-                <ul id="car-list" class="car-list"></ul>
-            </div>
-        </div>
-        <!-- Gráfico de autos -->
         <!-- Gráfico de autos -->
         <div class="graphic">
             <div id="chart-container">
                 <canvas id="line-chart"></canvas>
             </div>
+
             <!-- Contenedor para mostrar las especificaciones del auto -->
             <div id="car-details" class="car-details">
                 <h3>Detalles del Auto</h3>
                 <p id="car-specs"></p>
+            </div>
         </div>
-</div>
     </div>
 
     <script>
         let chart;  // Para mantener referencia al gráfico
 
         document.addEventListener('DOMContentLoaded', function() {
-            const categorySelect = document.getElementById('category-select');
-            const carList = document.getElementById('car-list'); // Elemento donde se mostrará la lista de autos
+            const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
+            const carSpecs = document.getElementById('car-specs'); // Donde se mostrarán las especificaciones
 
             // Cargar el CSV
             Papa.parse('datos/database.csv', {
                 download: true,
                 header: true,
                 complete: function(results) {
-                    // Procesar los datos
                     const data = results.data.map(item => {
                         return {
                             Name: item.Name,
@@ -87,27 +58,17 @@
                         };
                     });
 
-                    // Actualizar el gráfico inicialmente
-                    actualizarGrafico(categorySelect.value, data);
-
-                    // Añadir un listener para cambios en el select
-                    categorySelect.addEventListener('change', function() {
-                        console.log(this.value)
-                        actualizarGrafico(this.value, data);
-                    });
-
-                    // Mostrar la lista de autos
-                    actualizarListaAutos(data);
+                    // Inicializar el gráfico
+                    actualizarGrafico('Battery_kWh', data);
                 },
                 error: function(err) {
                     console.error('Error al cargar el archivo CSV:', err);
                 }
-            })
+            });
 
             // Función para actualizar el gráfico según la categoría seleccionada
             function actualizarGrafico(categoria, data) {
                 const precios = data.map(item => item.Price); // Obtiene los precios
-                const nombres = data.map(item => item.Name); // Obtiene los nombres de los autos
                 const valores = data.map(item => item[categoria]); // Obtiene los valores de la categoría seleccionada
 
                 // Si ya existe un gráfico, destrúyelo antes de crear uno nuevo
@@ -165,30 +126,29 @@
                                     }
                                 }
                             }
+                        },
+                        // Al hacer clic en un punto del gráfico, mostrar los detalles del auto
+                        onClick: function(e, item) {
+                            if (item.length > 0) {
+                                const index = item[0].index; // Obtener el índice del auto
+                                const car = data[index]; // Obtener los datos del auto
+
+                                // Mostrar las especificaciones del auto
+                                carDetails.style.display = 'block'; // Hacer visible el contenedor
+                                carSpecs.innerHTML = `
+                                    <strong>Nombre:</strong> ${car.Name}<br>
+                                    <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
+                                    <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
+                                    <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
+                                    <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
+                                    <strong>Autonomía:</strong> ${car.Range_km} km<br>
+                                    <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
+                                    <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
+                                    <strong>Puntuación:</strong> ${car.Score}<br>
+                                `;
+                            }
                         }
                     }
-                });
-            }
-
-            // Función para actualizar la lista de autos
-            function actualizarListaAutos(data) {
-                carList.innerHTML = ''; // Limpiar la lista
-
-                // Iterar sobre los datos y crear los elementos de la lista
-                data.forEach(item => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <strong>${item.Name}</strong><br>
-                        Batería: ${item.Battery_kWh} kWh<br>
-                        Aceleración: ${item.Acceleration_sec} s<br>
-                        Velocidad Máxima: ${item.TopSpeed_kmh} km/h<br>
-                        Autonomía: ${item.Range_km} km<br>
-                        Gasto: ${item.Efficiency_Whkm} Wh/km<br>
-                        Número de asientos: ${item.NumberofSeats}<br>
-                        Puntuación: ${item.Score}<br>
-                        Precio: €${item.Price.toLocaleString()}
-                    `;
-                    carList.appendChild(listItem);
                 });
             }
         });
