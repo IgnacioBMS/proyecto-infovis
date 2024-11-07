@@ -3,88 +3,95 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .container {
     display: grid;
-    grid-template-rows: auto 1fr;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
+    padding: 20px;
     height: 100vh;
-    grid-gap: 10px;
 }
 
 .header {
-    grid-column: 1 / 4;
+    grid-column: 1 / 4; /* Ocupa las tres columnas */
     background-color: #FF9966;
     text-align: center;
     padding: 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
+
 .title {
     font-size: 24px;
     font-weight: bold;
-    margin: 0 20px; /* Espacio alrededor del título */
-    flex: 1; /* Para que ocupe el espacio disponible */
-}
-.contexto, .info, .graphic {
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #f7f7f7;
-    border-radius: 5px;
+    margin: 0 20px;
+    flex: 1;
 }
 
 .contexto {
-    grid-column: 1; /* Primera columna */
+    grid-column: 1 / 2; /* Primera columna */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #f7f7f7;
 }
 
 .info {
-    grid-column: 2; /* Segunda columna */
-    overflow-y: auto; /* Scroll en caso de muchos datos */
+    grid-column: 2 / 3; /* Segunda columna */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #f7f7f7;
+    overflow-y: auto; /* Scroll si hay muchos autos */
 }
 
 .graphic {
-    grid-column: 3; /* Tercera columna */
+    grid-column: 3 / 4; /* Tercera columna */
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #f7f7f7;
 }
 
 #chart-container {
     width: 100%;
 }
+
 #line-chart {
-    max-width: 100%;
-}
-select {
-    margin-left: 10px; /* Espacio a la izquierda del select */
+    width: 100%;
+    height: 300px;
 }
 
-/* Estilos para los botones con efecto de pulsación */
+select {
+    margin-left: 10px;
+}
+
+/* Estilos de pulsación para el botón */
 .pulse-effect {
     border: none;
     color: white;
     padding: 14px 28px;
     cursor: pointer;
     border-radius: 5px;
-    background-color: #007bff; /* Color base del botón */
-    transition: transform 0.3s ease-in-out; /* Transición suave del efecto de pulsación */
+    background-color: #007bff;
+    transition: transform 0.3s ease-in-out;
 }
 
 .pulse-effect:hover {
-    background-color: #0056b3; /* Cambia el color al pasar el cursor sobre el botón */
+    background-color: #0056b3;
 }
 
 .pulse-effect:active {
-    transform: scale(0.90); /* Reduce ligeramente el tamaño del botón cuando se hace clic */
+    transform: scale(0.90);
 }
 
-.logo {
-    width: 100px; /* Ajusta el tamaño del logo según sea necesario */
-    height: auto;
-    margin-right: 10px; /* Espacio a la derecha del logo */
-}
-
-/* Estilos para la lista de autos */
+/* Estilo para la lista de autos */
 .car-list {
     list-style-type: none;
     padding: 0;
@@ -96,4 +103,10 @@ select {
     background-color: #f7f7f7;
     border: 1px solid #7a7a7a;
     border-radius: 5px;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    margin-right: 10px;
 }
