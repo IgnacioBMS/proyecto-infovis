@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Inicializar el gráfico con la categoría por defecto
-            actualizarGrafico('Battery_kWh', data);
+            actualizarGrafico('Score', data);
 
             // Agregar un evento para cambiar el gráfico cuando se seleccione una nueva categoría
             const categorySelect = document.getElementById('category-select');
