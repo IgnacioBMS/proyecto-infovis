@@ -69,6 +69,7 @@ h2 {
 h3 {
     font-size: 1.2em;
     margin-bottom: 5px;
+    text-align: center;
     color: #333;
 }
 
@@ -94,11 +95,13 @@ h3 {
 
 /* Párrafo */
 .context-text {
-    font-size: 1em;
-    line-height: 1.6;
-    color: #555;
-    text-align: center;
-    padding: 10px; /* Espacio interno alrededor del texto */
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 30px;
+    width: fit-content; /* Hace que el tamaño de la caja se ajuste al contenido */
+    margin: 10px; /* Espaciado externo */
+    text-align: center; /* Centra el texto dentro de la caja */
+    background-color: #f0f0f0; /* Fondo de color gris claro (opcional) */
 }
 
 /* Selector de categorías */
@@ -134,6 +137,7 @@ h3 {
 
 /* Gráfico (Columna derecha, primera fila de la sección principal) */
 .graphic {
+    align-self: center;
     grid-row: 2;
     grid-column: 2;
     background-color: #ffffff;
