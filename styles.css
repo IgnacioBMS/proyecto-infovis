@@ -3,7 +3,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Calibri, sans-serif;
+    font-size: 17px;
 }
 
 html, body {
@@ -155,22 +156,31 @@ h3 {
 /* Gráfico (Columna derecha, primera fila de la sección principal) */
 .graphic {
     align-self: center;
+    justify-self: center;
     grid-row: 2;
     grid-column: 2;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     padding: 15px;
+    width: 100%;
+    height: 100%;
 }
 
 #chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    max-width: 1000px;
+    max-width: 100%; /* Ajusta según tus necesidades */
     margin: 0 auto;
+    padding: 20px;
 }
 
 canvas {
     max-width: 100%;
     max-height: 100%;
+    width: auto;
+    height: auto;
 }
