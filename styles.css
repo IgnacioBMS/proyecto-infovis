@@ -79,7 +79,7 @@ h3 {
     grid-row: 2;
     grid-column: 1;
     padding: 15px;
-    background-color: #ffffff;
+    background:linear-gradient(top, red, gold);
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     overflow-y: auto; /* Para hacer scroll si el contenido es largo */
