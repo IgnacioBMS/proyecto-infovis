@@ -10,7 +10,7 @@
 html, body {
     height: 100%;
     width: 100%;
-    background:linear-gradient(top, red, gold);
+    background-color: #f4f4f9;
     color: #333;
     overflow: hidden; /* Evita el scroll */
 }
@@ -79,7 +79,7 @@ h3 {
     grid-row: 2;
     grid-column: 1;
     padding: 15px;
-    background:linear-gradient(top, red, gold);
+    background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     overflow-y: auto; /* Para hacer scroll si el contenido es largo */
