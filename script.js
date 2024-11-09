@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Inicializar el gráfico con la categoría por defecto
             actualizarGrafico('Score', data);
+            mostrarDetallesAuto(data[0])
 
             // Agregar un evento para cambiar el gráfico cuando se seleccione una nueva categoría
             const categorySelect = document.getElementById('category-select');
@@ -122,5 +123,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+    // Función para mostrar los detalles del auto
+    function mostrarDetallesAuto(car) {
+        // Mostrar las especificaciones del auto
+        carDetails.style.display = 'block'; // Hacer visible el contenedor
+        carSpecs.innerHTML = `
+            <strong>Nombre:</strong> ${car.Name}<br>
+            <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
+            <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
+            <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
+            <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
+            <strong>Autonomía:</strong> ${car.Range_km} km<br>
+            <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
+            <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
+            <strong>Puntuación:</strong> ${car.Score} / 100<br>
+        `;
     }
 });
