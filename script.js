@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <strong>Autonomía:</strong> ${car.Range_km} km<br>
                             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
                             <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
-                            <strong>Puntuación:</strong> ${car.Score}<br>
+                            <strong>Puntuación:</strong> ${car.Score} / 100<br>
                         `;
                     }
                 }
