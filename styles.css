@@ -10,7 +10,7 @@
 html, body {
     height: 100%;
     width: 100%;
-    background-color: #f4f4f9;
+    background:linear-gradient(top, red, gold);
     color: #333;
     overflow: hidden; /* Evita el scroll */
 }
