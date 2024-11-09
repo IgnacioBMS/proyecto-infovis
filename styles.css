@@ -12,7 +12,7 @@ body {
     display: grid;
     grid-template-areas:
         "logo title-select title-select"
-        "context chart-section chart-section"
+        "context graphic graphic"
         "context car-details car-details";
     grid-template-columns: 2fr 3fr 3fr;
     gap: 20px;
@@ -24,7 +24,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #09ff00;
 }
 
 .logo-img {
@@ -42,7 +41,6 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: #09ff00;
 }
 
 .title-select h1 {
@@ -60,8 +58,8 @@ body {
     background-color: #f9f9f9;
 }
 
-.chart-section {
-    grid-area: chart-section;
+.graphic {
+    grid-area: graphic;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -70,9 +68,9 @@ body {
     align-items: center;
 }
 
-.chart-section canvas {
+.graphic canvas {
     width: 100% !important;
-    height: 100% !important; /* Aumenta la altura del gráfico */
+    height: 400px !important; /* Aumenta la altura del gráfico */
 }
 
 .car-details {
