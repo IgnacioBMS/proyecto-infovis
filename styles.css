@@ -134,23 +134,12 @@ h3 {
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-/* Efecto de pulso en el selector */
-.pulse-effect {
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
+/* Efecto al pasar el mouse */
+#category-select:hover {
+    transform: scale(1.1); /* Agranda el elemento un 10% */
 }
 
 /* Gráfico (Columna derecha, primera fila de la sección principal) */

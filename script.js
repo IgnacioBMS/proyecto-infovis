@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: precios, // Usar los precio de los autos en el eje X
                 datasets: [{
-                    label: categoria,
                     data: valores, // Datos de la categoría en el eje Y
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
