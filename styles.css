@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Estilos generales */
 * {
     margin: 0;
     padding: 0;
@@ -6,18 +6,27 @@
     font-family: Arial, sans-serif;
 }
 
-body {
+html, body {
+    height: 100%;
+    width: 100%;
     background-color: #f4f4f9;
     color: #333;
+    overflow: hidden; /* Evita el scroll */
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: 100%;
+    width: 100%;
     padding: 20px;
 }
 
+/* Header ocupa toda la primera fila y ambas columnas */
 .header {
+    grid-column: 1 / span 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,6 +34,7 @@ body {
     border-bottom: 2px solid #e0e0e0;
 }
 
+/* Elementos de la cabecera */
 .logo {
     flex: 1;
 }
@@ -44,6 +54,7 @@ body {
     text-align: right;
 }
 
+/* Estilos del título y subtítulos */
 h1 {
     font-size: 2em;
     color: #333;
@@ -61,12 +72,15 @@ h3 {
     color: #333;
 }
 
+/* Columna izquierda (Contexto) */
 .context {
-    margin: 20px 0;
+    grid-row: 2;
+    grid-column: 1;
     padding: 15px;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
+    overflow-y: auto; /* Para hacer scroll si el contenido es largo */
 }
 
 .context p {
@@ -74,6 +88,7 @@ h3 {
     line-height: 1.6;
 }
 
+/* Selector de categorías */
 .selector label {
     font-weight: bold;
     margin-right: 5px;
@@ -87,6 +102,7 @@ h3 {
     cursor: pointer;
 }
 
+/* Efecto de pulso en el selector */
 .pulse-effect {
     animation: pulse 1.5s infinite;
 }
@@ -103,8 +119,10 @@ h3 {
     }
 }
 
+/* Gráfico (Columna derecha, primera fila de la sección principal) */
 .graphic {
-    margin-top: 20px;
+    grid-row: 2;
+    grid-column: 2;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
@@ -113,21 +131,25 @@ h3 {
 
 #chart-container {
     width: 100%;
+    height: 100%;
     max-width: 1000px;
     margin: 0 auto;
 }
 
 canvas {
     max-width: 100%;
-    height: 400px;
+    max-height: 100%;
 }
 
+/* Detalles del auto (Debajo del gráfico) */
 .car-details {
-    margin-top: 20px;
+    grid-row: 3;
+    grid-column: 2;
     padding: 15px;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
+    overflow-y: auto; /* Para hacer scroll si los detalles son largos */
 }
 
 #car-specs {
