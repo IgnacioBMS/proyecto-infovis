@@ -104,6 +104,23 @@ h3 {
     background-color: #f0f0f0; /* Fondo de color gris claro (opcional) */
 }
 
+/* Detalles del auto (Debajo del gráfico) */
+.car-details {
+    grid-row: 3;
+    grid-column: 2;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow-y: auto; /* Para hacer scroll si los detalles son largos */
+}
+
+#car-specs {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+
 /* Selector de categorías */
 .selector label {
     font-weight: bold;
@@ -156,20 +173,4 @@ h3 {
 canvas {
     max-width: 100%;
     max-height: 100%;
-}
-
-/* Detalles del auto (Debajo del gráfico) */
-.car-details {
-    grid-row: 3;
-    grid-column: 2;
-    padding: 15px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    overflow-y: auto; /* Para hacer scroll si los detalles son largos */
-}
-
-#car-specs {
-    font-size: 1em;
-    line-height: 1.6;
 }
