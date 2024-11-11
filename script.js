@@ -1,5 +1,5 @@
 let chart;  // Para mantener referencia al gráfico
-let audio = new Audio('audio/audio.mp3'); // Ruta a tu archivo de audio
+let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
 audio.loop = true; // Si quieres que el audio se repita
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: precios, // Usar los precio de los autos en el eje X
+                labels: precios, // Usar los precios de los autos en el eje X
                 datasets: [{
                     label: categoria,
                     data: valores, // Datos de la categoría en el eje Y
@@ -70,6 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     fill: false,
                     hoverBackgroundColor: 'rgba(255, 99, 132, 0.2)',
                     hoverBorderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Color de fondo para los puntos
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)' // Color de los puntos
                 }]
             },
             options: {
@@ -92,12 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            // El título el valor del eje Y (el dato graficado)
                             title: function(context) {
                                 const valor = context[0].raw; // Obtener el valor del eje Y
                                 return valor.toFixed(2); // Muestra el valor del eje Y como título
                             },
-                            // La etiqueta el nombre del auto y su precio
                             label: function(context) {
                                 const index = context.dataIndex;
                                 const name = data[index].Name; // Obtener el nombre del auto
@@ -134,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para mostrar los detalles del auto
     function mostrarDetallesAuto(car) {
-        // Mostrar las especificaciones del auto
         carDetails.style.display = 'block'; // Hacer visible el contenedor
         carSpecs.innerHTML = `
             <strong>Nombre:</strong> ${car.Name}<br>
@@ -156,11 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleVolumeButton.addEventListener('click', function() {
         isVolumeTracking = !isVolumeTracking; // Alternar el estado del seguimiento
 
-        // Cambiar el texto y el ícono del botón según el estado
+        // Cambiar el ícono del botón según el estado
         if (isVolumeTracking) {
-            volumeIcon.classList.remove('fas fa-play');
-            volumeIcon.classList.add('fas fa-pause');
-            toggleVolumeButton.textContent = 'Volumen';
+            volumeIcon.classList.remove('fa-play');
+            volumeIcon.classList.add('fa-pause'); // Cambiar el ícono a "pause"
 
             // Iniciar el intervalo para actualizar el volumen continuamente
             intervalId = setInterval(function() {
@@ -172,14 +170,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         audio.volume = volume; // Ajusta el volumen del audio
                     }
                 }
+
+                // Actualizar la línea del gráfico hasta el punto donde se está reproduciendo el sonido
+                const audioTimePercentage = audio.currentTime / audio.duration; // Porcentaje de la canción reproducida
+                const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice hasta donde cambiar el color
+                updateChartLine(limitIndex); // Actualizar la línea del gráfico
             }, 100); // Actualiza cada 100ms
         } else {
-            volumeIcon.classList.remove('fas fa-pause');
-            volumeIcon.classList.add('fas fa-play');
-            toggleVolumeButton.textContent = 'Volumen';
+            volumeIcon.classList.remove('fa-pause');
+            volumeIcon.classList.add('fa-play'); // Cambiar el ícono a "play"
 
             // Detener el seguimiento de volumen
             clearInterval(intervalId);
         }
     });
-});
+
+    // Función para cambiar el color de la línea en el gráfico
+    function updateChartLine(limitIndex) {
