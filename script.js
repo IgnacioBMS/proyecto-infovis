@@ -1,5 +1,5 @@
 let chart;  // Para mantener referencia al gráfico
-let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
+let audio = new Audio('audio/audio.mp3'); // Ruta a tu archivo de audio
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
 let intervalId; // Para guardar la referencia al intervalo de actualización
 let duration = 30; // Duración total en segundos para recorrer el gráfico
