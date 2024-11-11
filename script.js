@@ -1,5 +1,5 @@
 let chart;  // Para mantener referencia al gráfico
-let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
+let audio = new Audio('audio/audio.mp3'); // Ruta a tu archivo de audio
 audio.loop = true; // Si quieres que el audio se repita
 
 document.addEventListener('DOMContentLoaded', function() {
