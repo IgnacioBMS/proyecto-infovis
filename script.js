@@ -3,7 +3,7 @@ let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // El audio se reproduce en bucle
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
 let intervalId; // Para guardar la referencia del intervalo
-const velocidadFactor = 0.2; // Factor para ralentizar el avance del gráfico
+const velocidadFactor = 0.5; // Factor para ajustar el avance en el gráfico
 
 document.addEventListener('DOMContentLoaded', function () {
     const carDetails = document.getElementById('car-details');
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 pausarAudio(); // Detener audio al cambiar de categoría
                 const categoria = categorySelect.value;
                 actualizarGrafico(categoria, data);
-                reiniciarColorLinea(); // Restablecer el color original de la línea
+                reiniciarColorLinea(); // Restablecer el gráfico original
             });
         },
         error: function (err) {
@@ -67,15 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderWidth: 2,
                         fill: false,
                         pointBackgroundColor: 'rgba(75, 192, 192, 1)'
-                    },
-                    {
-                        label: 'Progreso del Audio',
-                        data: [],
-                        borderColor: 'rgba(255, 99, 132, 1)', // Color rojo para la parte reproducida
-                        borderWidth: 2,
-                        fill: false,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                        pointRadius: 0
                     }
                 ]
             },
@@ -148,11 +139,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         intervalId = setInterval(() => {
             if (chart) {
-                const audioProgress = (audio.currentTime / audio.duration) * velocidadFactor;
+                const audioProgress = (audio.currentTime / audio.duration);
                 const limitIndex = Math.floor(audioProgress * chart.data.labels.length);
                 updateChartLine(limitIndex);
+                ajustarVolumen(audioProgress);
             }
-        }, 200); // Actualiza cada 200ms
+        }, 300); // Actualiza cada 300ms
     }
 
     function pausarAudio() {
@@ -163,19 +155,23 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    // Función para actualizar la línea según el progreso del audio
+    // Función para actualizar la línea eliminando los puntos aún no reproducidos
     function updateChartLine(limitIndex) {
-        const originalDataset = chart.data.datasets[0].data;
-        chart.data.datasets[1].data = originalDataset.map((value, index) =>
+        chart.data.datasets[0].data = chart.data.datasets[0].data.map((value, index) =>
             index <= limitIndex ? value : null
         );
         chart.update();
     }
 
-    // Función para restablecer el color original de la línea
+    // Función para ajustar el volumen según el progreso del audio
+    function ajustarVolumen(progress) {
+        audio.volume = progress; // Volumen aumenta de 0 a 1 según el progreso
+    }
+
+    // Función para restablecer el gráfico original
     function reiniciarColorLinea() {
         if (chart) {
-            chart.data.datasets[1].data = []; // Vaciar el dataset rojo
+            chart.data.datasets[0].data = chart.data.labels.map((_, index) => chart.data.datasets[0].data[index] || 0);
             chart.update();
         }
     }
