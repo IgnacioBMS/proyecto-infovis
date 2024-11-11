@@ -2,6 +2,7 @@ let chart;  // Para mantener referencia al gráfico
 let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
 let intervalId; // Para guardar la referencia al intervalo de actualización
+let duration = 30; // Duración total en segundos para recorrer el gráfico
 
 document.addEventListener('DOMContentLoaded', function() {
     const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
@@ -170,18 +171,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Calcular el porcentaje de avance del audio
                     const audioTimePercentage = audio.currentTime / audio.duration;
-                    const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice límite
+                    const limitIndex = Math.floor(audioTimePercentage * (data.length - 1));
+                    const currentValue = data[limitIndex][categorySelect.value];
 
-                    // Cambiar el color de la línea en el gráfico
-                    chart.data.datasets[0].borderColor = chart.data.datasets[0].borderColor.replace(
-                        /rgba\(.*\)/, 
-                        `rgba(75, 192, 192, ${audioTimePercentage})`
-                    );
-                    
+                    // Aquí puedes modificar el volumen del audio basado en el gráfico
+                    audio.volume = currentValue / 100; // Ajustar volumen según el valor actual
+
+                    // Cambiar color de la línea del gráfico de acuerdo con el progreso
+                    chart.data.datasets[0].borderColor = `rgba(75, 192, 192, ${audioTimePercentage})`;
+
                     // Actualizar el gráfico
                     chart.update();
                 }
-            }, 100); // Actualizar cada 100ms
+            }, (duration * 1000) / data.length); // Dividir la duración entre la cantidad de datos
         }
 
         isPlaying = !isPlaying; // Alternar el estado de reproducción
