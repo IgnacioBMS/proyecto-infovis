@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const limitIndex = Math.floor(audioProgress * chart.data.labels.length);
                     updateChartLine(limitIndex);
                 }
-            }, 100);
+            }, 500);
         }
     });
 });
