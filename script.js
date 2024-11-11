@@ -158,8 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Cambiar el texto y el ícono del botón según el estado
         if (isVolumeTracking) {
-            volumeIcon.classList.remove('fa-play');
-            volumeIcon.classList.add('fa-pause');
+            volumeIcon.classList.remove('fas fa-play');
+            volumeIcon.classList.add('fas fa-pause');
             toggleVolumeButton.textContent = 'Volumen';
 
             // Iniciar el intervalo para actualizar el volumen continuamente
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 100); // Actualiza cada 100ms
         } else {
-            volumeIcon.classList.remove('fa-pause');
-            volumeIcon.classList.add('fa-play');
+            volumeIcon.classList.remove('fas fa-pause');
+            volumeIcon.classList.add('fas fa-play');
             toggleVolumeButton.textContent = 'Volumen';
 
             // Detener el seguimiento de volumen
