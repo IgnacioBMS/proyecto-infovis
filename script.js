@@ -1,6 +1,7 @@
 let chart;  // Para mantener referencia al gráfico
 let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
-audio.loop = true; // Si quieres que el audio se repita
+let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
+let intervalId; // Para guardar la referencia al intervalo de actualización
 
 document.addEventListener('DOMContentLoaded', function() {
     const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
@@ -9,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const volumeIcon = document.getElementById('volume-icon'); // El ícono dentro del botón
 
     let isVolumeTracking = false; // Variable para controlar si el seguimiento de volumen está activado
-    let intervalId; // Para guardar la referencia al intervalo de actualización
 
     // Cargar el CSV
     Papa.parse('datos/database.csv', {
@@ -148,52 +148,40 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    // Iniciar audio
-    audio.play();
-
     // Función para manejar el botón de play/pause y seguimiento de volumen
     toggleVolumeButton.addEventListener('click', function() {
-        isVolumeTracking = !isVolumeTracking; // Alternar el estado del seguimiento
-
-        // Cambiar el ícono del botón según el estado
-        if (isVolumeTracking) {
+        if (isPlaying) {
+            // Si ya está reproduciéndose, pausarlo
+            audio.pause();
+            volumeIcon.classList.remove('fa-pause');
+            volumeIcon.classList.add('fa-play'); // Cambiar el ícono a "play"
+            clearInterval(intervalId); // Detener la actualización de la línea en el gráfico
+        } else {
+            // Si no está reproduciéndose, reproducirlo
+            audio.play();
             volumeIcon.classList.remove('fa-play');
             volumeIcon.classList.add('fa-pause'); // Cambiar el ícono a "pause"
 
-            // Iniciar el intervalo para actualizar el volumen continuamente
+            // Iniciar el intervalo para actualizar el volumen y el gráfico
             intervalId = setInterval(function() {
                 if (chart) {
-                    const currentIndex = chart.tooltip._active[0].dataIndex; // Obtener el índice del punto seleccionado en el gráfico
-                    if (currentIndex !== undefined) {
-                        const yValue = chart.data.datasets[0].data[currentIndex]; // Obtener el valor del eje Y
-                        const volume = Math.min(Math.max(yValue / 100, 0), 1); // Mapeo de 0 a 1
-                        audio.volume = volume; // Ajusta el volumen del audio
-                    }
+                    const audioTimePercentage = audio.currentTime / audio.duration; // Porcentaje de la canción reproducida
+                    const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice hasta donde cambiar el color
+                    updateChartLine(limitIndex); // Actualizar la línea del gráfico
                 }
-
-                // Actualizar la línea del gráfico hasta el punto donde se está reproduciendo el sonido
-                const audioTimePercentage = audio.currentTime / audio.duration; // Porcentaje de la canción reproducida
-                const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice hasta donde cambiar el color
-                updateChartLine(limitIndex); // Actualizar la línea del gráfico
             }, 100); // Actualiza cada 100ms
-        } else {
-            volumeIcon.classList.remove('fa-pause');
-            volumeIcon.classList.add('fa-play'); // Cambiar el ícono a "play"
-
-            // Detener el seguimiento de volumen
-            clearInterval(intervalId);
         }
+
+        // Alternar el estado de reproducción
+        isPlaying = !isPlaying;
     });
 
     // Función para cambiar el color de la línea en el gráfico
     function updateChartLine(limitIndex) {
-        const originalData = chart.data.datasets[0].data;
-        const updatedData = originalData.slice(); // Copiar los datos
-
         // Cambiar el color de la línea hasta el índice correspondiente
         for (let i = 0; i < limitIndex; i++) {
-            chart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.2)'; // Cambiar color de los puntos
             chart.data.datasets[0].borderColor = 'rgba(255, 99, 132, 1)'; // Cambiar color de la línea
+            chart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.2)'; // Cambiar color de los puntos
         }
 
         // Volver a pintar el gráfico con el color actualizado
