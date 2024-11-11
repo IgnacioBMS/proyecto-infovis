@@ -1,9 +1,9 @@
-let chart; // Para mantener referencia al gráfico
-let audio = new Audio('audio/audio.mp3'); // Ruta a tu archivo de audio
-audio.loop = true; // Hacer que el audio se reproduzca en bucle
-let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
-let intervalId; // Para guardar la referencia al intervalo de actualización
-const velocidadFactor = 0.2; // Factor para ralentizar el avance por el gráfico
+let chart; // Referencia al gráfico
+let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
+audio.loop = true; // El audio se reproduce en bucle
+let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
+let intervalId; // Para guardar la referencia del intervalo
+const velocidadFactor = 0.2; // Factor para ralentizar el avance del gráfico
 
 document.addEventListener('DOMContentLoaded', function () {
     const carDetails = document.getElementById('car-details');
@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleVolumeButton = document.getElementById('toggle-volume');
     const volumeIcon = document.getElementById('volume-icon');
     const categorySelect = document.getElementById('category-select');
-
-    let isVolumeTracking = false;
 
     // Cargar el CSV
     Papa.parse('datos/database.csv', {
@@ -34,10 +32,12 @@ document.addEventListener('DOMContentLoaded', function () {
             actualizarGrafico('Score', data);
             mostrarDetallesAuto(data[0]);
 
+            // Evento para cambiar de categoría y reiniciar audio y gráfico
             categorySelect.addEventListener('change', function () {
                 pausarAudio(); // Detener audio al cambiar de categoría
                 const categoria = categorySelect.value;
                 actualizarGrafico(categoria, data);
+                reiniciarColorLinea(); // Restablecer el color original de la línea
             });
         },
         error: function (err) {
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Función para actualizar el gráfico
+    // Función para actualizar el gráfico según la categoría seleccionada
     function actualizarGrafico(categoria, data) {
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: categoria,
                         data: valores,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
                         borderWidth: 2,
                         fill: false,
                         pointBackgroundColor: 'rgba(75, 192, 192, 1)'
@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: 'Progreso del Audio',
                         data: [],
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: 'rgba(255, 99, 132, 1)', // Color rojo para la parte reproducida
                         borderWidth: 2,
                         fill: false,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
                         pointRadius: 0
                     }
                 ]
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Función para mostrar los detalles del auto
+    // Mostrar detalles del auto
     function mostrarDetallesAuto(car) {
         carDetails.style.display = 'block';
         carSpecs.innerHTML = `
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const limitIndex = Math.floor(audioProgress * chart.data.labels.length);
                 updateChartLine(limitIndex);
             }
-        }, 200); // Actualizar cada 200ms
+        }, 200); // Actualiza cada 200ms
     }
 
     function pausarAudio() {
@@ -163,12 +163,20 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    // Función para actualizar el gráfico según el progreso del audio
+    // Función para actualizar la línea según el progreso del audio
     function updateChartLine(limitIndex) {
         const originalDataset = chart.data.datasets[0].data;
         chart.data.datasets[1].data = originalDataset.map((value, index) =>
             index <= limitIndex ? value : null
         );
         chart.update();
+    }
+
+    // Función para restablecer el color original de la línea
+    function reiniciarColorLinea() {
+        if (chart) {
+            chart.data.datasets[1].data = []; // Vaciar el dataset rojo
+            chart.update();
+        }
     }
 });
