@@ -187,3 +187,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para cambiar el color de la línea en el gráfico
     function updateChartLine(limitIndex) {
+        const originalData = chart.data.datasets[0].data;
+        const updatedData = originalData.slice(); // Copiar los datos
+
+        // Cambiar el color de la línea hasta el índice correspondiente
+        for (let i = 0; i < limitIndex; i++) {
+            chart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.2)'; // Cambiar color de los puntos
+            chart.data.datasets[0].borderColor = 'rgba(255, 99, 132, 1)'; // Cambiar color de la línea
+        }
+
+        // Volver a pintar el gráfico con el color actualizado
+        chart.update();
+    }
+});
