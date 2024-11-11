@@ -6,6 +6,7 @@
     <title>Comparación de Autos Eléctricos</title>
     <link rel="stylesheet" href="styles.css"> 
     <link rel="icon" href="imagenes/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
@@ -33,7 +34,9 @@
                 <option value="NumberofSeats">Número de asientos</option>
             </select>
             <!-- Botón para seguir el cambio de volumen -->
-            <button id="toggle-volume" class="pulse-effect">Iniciar Seguimiento de Volumen</button>
+            <button id="toggle-volume" class="pulse-effect">
+                <span id="volume-icon" class="fas fa-play"></span> Iniciar Seguimiento de Volumen
+            </button>
 
         </div>
 
