@@ -3,6 +3,8 @@ let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
 let intervalId; // Para guardar la referencia al intervalo de actualización
 let duration = 30; // Duración total en segundos para recorrer el gráfico
+let audioTimeInterval = 0; // Variable para almacenar el tiempo de reproducción del audio
+let data; // Almacenamos los datos cargados del CSV
 
 document.addEventListener('DOMContentLoaded', function() {
     const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         download: true,
         header: true,
         complete: function(results) {
-            const data = results.data.map(item => {
+            data = results.data.map(item => {
                 return {
                     Name: item.Name,
                     Price: parseInt(item.PriceinEurope), // Convertir a número
@@ -91,31 +93,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 },
-                // Personalización del tooltip para mostrar el nombre del auto y el precio
                 plugins: {
                     tooltip: {
                         callbacks: {
                             title: function(context) {
-                                const valor = context[0].raw; // Obtener el valor del eje Y
-                                return valor.toFixed(2); // Muestra el valor del eje Y como título
+                                const valor = context[0].raw;
+                                return valor.toFixed(2);
                             },
                             label: function(context) {
                                 const index = context.dataIndex;
-                                const name = data[index].Name; // Obtener el nombre del auto
-                                const price = context.label; // Obtener el precio (eje X)
+                                const name = data[index].Name;
+                                const price = context.label;
                                 return `${name}: €${parseFloat(price).toLocaleString()}`;
                             }
                         }
                     }
                 },
-                // Al hacer clic en un punto del gráfico, mostrar los detalles del auto
                 onClick: function(e, item) {
                     if (item.length > 0) {
-                        const index = item[0].index; // Obtener el índice del auto
-                        const car = data[index]; // Obtener los datos del auto
-
-                        // Mostrar las especificaciones del auto
-                        carDetails.style.display = 'block'; // Hacer visible el contenedor
+                        const index = item[0].index;
+                        const car = data[index];
+                        carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
                             <strong>Nombre:</strong> ${car.Name}<br>
                             <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
@@ -135,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para mostrar los detalles del auto
     function mostrarDetallesAuto(car) {
-        carDetails.style.display = 'block'; // Hacer visible el contenedor
+        carDetails.style.display = 'block';
         carSpecs.innerHTML = `
             <strong>Nombre:</strong> ${car.Name}<br>
             <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
@@ -152,40 +150,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para manejar el botón de play/pause y sincronizar el gráfico con el audio
     toggleVolumeButton.addEventListener('click', function() {
         if (isPlaying) {
-            // Si ya está reproduciéndose, pausarlo
             audio.pause();
             volumeIcon.classList.remove('fa-pause');
-            volumeIcon.classList.add('fa-play'); // Cambiar el ícono a "play"
-            clearInterval(intervalId); // Detener la actualización de la línea en el gráfico
+            volumeIcon.classList.add('fa-play');
+            clearInterval(intervalId);
         } else {
-            // Si no está reproduciéndose, iniciar desde el principio
-            audio.currentTime = 0; // Comenzar desde el inicio
+            audio.currentTime = 0;
             audio.play();
             volumeIcon.classList.remove('fa-play');
-            volumeIcon.classList.add('fa-pause'); // Cambiar el ícono a "pause"
+            volumeIcon.classList.add('fa-pause');
 
-            // Iniciar el intervalo para actualizar el gráfico conforme al audio
             intervalId = setInterval(function() {
                 if (audio.paused || audio.ended) {
                     clearInterval(intervalId); // Detener la actualización si el audio se pausa o termina
                 } else {
-                    // Calcular el porcentaje de avance del audio
-                    const audioTimePercentage = audio.currentTime / audio.duration;
-                    const limitIndex = Math.floor(audioTimePercentage * (data.length - 1));
-                    const currentValue = data[limitIndex][categorySelect.value];
+                    audioTimeInterval = audio.currentTime / audio.duration; // Obtener el porcentaje de reproducción
 
-                    // Aquí puedes modificar el volumen del audio basado en el gráfico
-                    audio.volume = currentValue / 100; // Ajustar volumen según el valor actual
+                    // Calcular el índice del gráfico correspondiente según el tiempo del audio
+                    const currentIndex = Math.floor(audioTimeInterval * (data.length - 1));
 
-                    // Cambiar color de la línea del gráfico de acuerdo con el progreso
-                    chart.data.datasets[0].borderColor = `rgba(75, 192, 192, ${audioTimePercentage})`;
+                    // Obtener el valor de la categoría en el índice actual
+                    const currentValue = data[currentIndex][document.getElementById('category-select').value];
 
-                    // Actualizar el gráfico
+                    // Ajustar el volumen del audio según el valor del gráfico
+                    audio.volume = currentValue / 100; // El volumen varía entre 0 y 1
+
+                    // Actualizar el gráfico con el nuevo valor
+                    chart.data.datasets[0].borderColor = `rgba(75, 192, 192, ${audioTimeInterval})`;
                     chart.update();
                 }
-            }, (duration * 1000) / data.length); // Dividir la duración entre la cantidad de datos
+            }, (duration * 1000) / data.length); // Sincronización del intervalo para cambiar el gráfico
         }
 
-        isPlaying = !isPlaying; // Alternar el estado de reproducción
+        isPlaying = !isPlaying; // Alternar estado de reproducción
     });
 });
