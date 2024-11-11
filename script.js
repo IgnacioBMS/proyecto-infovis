@@ -1,5 +1,5 @@
 let chart;  // Para mantener referencia al gráfico
-let audio = new Audio('audio/audio.mp3'); // Ruta a tu archivo de audio
+let audio = new Audio('audio/tu-archivo.mp3'); // Ruta a tu archivo de audio
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausado
 let intervalId; // Para guardar la referencia al intervalo de actualización
 
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    // Función para manejar el botón de play/pause y seguimiento de volumen
+    // Función para manejar el botón de play/pause y sincronizar el gráfico con el audio
     toggleVolumeButton.addEventListener('click', function() {
         if (isPlaying) {
             // Si ya está reproduciéndose, pausarlo
@@ -157,34 +157,33 @@ document.addEventListener('DOMContentLoaded', function() {
             volumeIcon.classList.add('fa-play'); // Cambiar el ícono a "play"
             clearInterval(intervalId); // Detener la actualización de la línea en el gráfico
         } else {
-            // Si no está reproduciéndose, reproducirlo
+            // Si no está reproduciéndose, iniciar desde el principio
+            audio.currentTime = 0; // Comenzar desde el inicio
             audio.play();
             volumeIcon.classList.remove('fa-play');
             volumeIcon.classList.add('fa-pause'); // Cambiar el ícono a "pause"
 
-            // Iniciar el intervalo para actualizar el volumen y el gráfico
+            // Iniciar el intervalo para actualizar el gráfico conforme al audio
             intervalId = setInterval(function() {
-                if (chart) {
-                    const audioTimePercentage = audio.currentTime / audio.duration; // Porcentaje de la canción reproducida
-                    const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice hasta donde cambiar el color
-                    updateChartLine(limitIndex); // Actualizar la línea del gráfico
+                if (audio.paused || audio.ended) {
+                    clearInterval(intervalId); // Detener la actualización si el audio se pausa o termina
+                } else {
+                    // Calcular el porcentaje de avance del audio
+                    const audioTimePercentage = audio.currentTime / audio.duration;
+                    const limitIndex = Math.floor(audioTimePercentage * chart.data.labels.length); // Índice límite
+
+                    // Cambiar el color de la línea en el gráfico
+                    chart.data.datasets[0].borderColor = chart.data.datasets[0].borderColor.replace(
+                        /rgba\(.*\)/, 
+                        `rgba(75, 192, 192, ${audioTimePercentage})`
+                    );
+                    
+                    // Actualizar el gráfico
+                    chart.update();
                 }
-            }, 100); // Actualiza cada 100ms
+            }, 100); // Actualizar cada 100ms
         }
 
-        // Alternar el estado de reproducción
-        isPlaying = !isPlaying;
+        isPlaying = !isPlaying; // Alternar el estado de reproducción
     });
-
-    // Función para cambiar el color de la línea en el gráfico
-    function updateChartLine(limitIndex) {
-        // Cambiar el color de la línea hasta el índice correspondiente
-        for (let i = 0; i < limitIndex; i++) {
-            chart.data.datasets[0].borderColor = 'rgba(255, 99, 132, 1)'; // Cambiar color de la línea
-            chart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.2)'; // Cambiar color de los puntos
-        }
-
-        // Volver a pintar el gráfico con el color actualizado
-        chart.update();
-    }
 });
