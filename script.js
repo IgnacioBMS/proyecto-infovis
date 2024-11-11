@@ -1,10 +1,8 @@
 let chart; // Referencia al gráfico
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
-audio.loop = true; // El audio se reproduce en bucle
+audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
 let intervalId; // Para guardar la referencia del intervalo
-const volumenMin = 0.1; // Volumen mínimo (10%)
-const volumenMax = 1;   // Volumen máximo (100%)
 const velocidadFactor = 0.5; // Factor para ajustar el avance en el gráfico
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -36,11 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
-                pausarAudio(); // Detener el audio y reiniciar el progreso
                 const categoria = categorySelect.value;
                 actualizarGrafico(categoria, data);
-                reiniciarAudio(); // Reiniciar el audio y su progreso
-                reiniciarColorLinea(); // Reiniciar el color de la línea del gráfico
             });
         },
         error: function (err) {
@@ -52,6 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarGrafico(categoria, data) {
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
+
+        // Determinar valores mínimo y máximo con límite entre 10 y 100
+        const minValor = Math.max(10, Math.min(...valores));
+        const maxValor = Math.min(100, Math.max(...valores));
 
         if (chart) {
             chart.destroy();
@@ -66,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: categoria,
                         data: valores,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
                         borderWidth: 2,
                         fill: false,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                     }
                 ]
             },
@@ -83,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     },
                     y: {
+                        min: minValor,
+                        max: maxValor,
                         title: {
                             display: true,
                             text: categoria
@@ -142,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         intervalId = setInterval(() => {
             if (chart) {
-                const audioProgress = (audio.currentTime / audio.duration);
-                const limitIndex = Math.floor(audioProgress * chart.data.labels.length);
-                updateChartLine(limitIndex);
-                ajustarVolumen(audioProgress);
+                const totalPoints = chart.data.labels.length;
+                let currentIndex = Math.floor(audio.currentTime * velocidadFactor) % totalPoints;
+                updateChartLine(currentIndex);
+                ajustarVolumen(currentIndex / totalPoints);
             }
         }, 300); // Actualiza cada 300ms
     }
@@ -158,34 +159,16 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    // Reiniciar el audio
-    function reiniciarAudio() {
-        audio.currentTime = 0; // Reinicia el audio al principio
-        audio.play(); // Comienza a reproducir nuevamente
-        isPlaying = true;
-        volumeIcon.classList.remove('fa-play');
-        volumeIcon.classList.add('fa-pause');
-    }
-
-    // Función para actualizar la línea según el progreso
+    // Función para actualizar la línea eliminando los puntos aún no reproducidos
     function updateChartLine(limitIndex) {
-        chart.data.datasets[0].pointBackgroundColor = chart.data.labels.map((_, index) =>
-            index <= limitIndex ? 'rgba(255, 0, 0, 1)' : 'rgba(75, 192, 192, 1)'
+        chart.data.datasets[0].data = chart.data.datasets[0].data.map((value, index) =>
+            index <= limitIndex ? value : null
         );
         chart.update();
     }
 
-    // Función para ajustar el volumen según el progreso del audio
+    // Función para ajustar el volumen según el progreso del gráfico
     function ajustarVolumen(progress) {
-        const volumen = volumenMin + (volumenMax - volumenMin) * progress;
-        audio.volume = volumen;
-    }
-
-    // Función para restablecer el gráfico original
-    function reiniciarColorLinea() {
-        if (chart) {
-            chart.data.datasets[0].pointBackgroundColor = chart.data.labels.map(() => 'rgba(75, 192, 192, 1)');
-            chart.update();
-        }
+        audio.volume = progress; // Volumen aumenta de 0 a 1 según el progreso en el gráfico
     }
 });
