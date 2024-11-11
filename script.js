@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isVolumeTracking) {
             volumeIcon.classList.remove('fa-play');
             volumeIcon.classList.add('fa-pause');
-            toggleVolumeButton.textContent = ' Detener Seguimiento de Volumen';
+            toggleVolumeButton.textContent = 'Volumen';
 
             // Iniciar el intervalo para actualizar el volumen continuamente
             intervalId = setInterval(function() {
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             volumeIcon.classList.remove('fa-pause');
             volumeIcon.classList.add('fa-play');
-            toggleVolumeButton.textContent = ' Iniciar Seguimiento de Volumen';
+            toggleVolumeButton.textContent = 'Volumen';
 
             // Detener el seguimiento de volumen
             clearInterval(intervalId);
