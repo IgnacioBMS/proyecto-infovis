@@ -1,8 +1,15 @@
-let chart;  // Para mantener referencia al gráfico
+let chart; // Para mantener la referencia al gráfico
+let audio = new Audio('audio.mp3'); // Ruta del archivo MP3
+audio.loop = true; // Si quieres que el audio se repita en bucle
+audio.play(); // Reproduce el audio cuando se carga la página
+
+let isVolumeTracking = false; // Variable para controlar si el seguimiento de volumen está activado
+let intervalId; // Para guardar la referencia al intervalo de actualización
 
 document.addEventListener('DOMContentLoaded', function() {
     const carDetails = document.getElementById('car-details'); // Contenedor para los detalles del auto
     const carSpecs = document.getElementById('car-specs'); // Donde se mostrarán las especificaciones
+    const toggleVolumeButton = document.getElementById('toggle-volume'); // El botón para activar/desactivar el seguimiento
 
     // Cargar el CSV
     Papa.parse('datos/database.csv', {
@@ -25,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Inicializar el gráfico con la categoría por defecto
             actualizarGrafico('Score', data);
-            mostrarDetallesAuto(data[0])
+            mostrarDetallesAuto(data[0]);
 
             // Agregar un evento para cambiar el gráfico cuando se seleccione una nueva categoría
             const categorySelect = document.getElementById('category-select');
@@ -85,12 +92,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            // El título el valor del eje Y (el dato graficado)
                             title: function(context) {
                                 const valor = context[0].raw; // Obtener el valor del eje Y
                                 return valor.toFixed(2); // Muestra el valor del eje Y como título
                             },
-                            // La etiqueta el nombre del auto y su precio
                             label: function(context) {
                                 const index = context.dataIndex;
                                 const name = data[index].Name; // Obtener el nombre del auto
@@ -124,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
     // Función para mostrar los detalles del auto
     function mostrarDetallesAuto(car) {
         // Mostrar las especificaciones del auto
@@ -140,4 +146,29 @@ document.addEventListener('DOMContentLoaded', function() {
             <strong>Puntuación:</strong> ${car.Score} / 100<br>
         `;
     }
+
+    // Evento del botón para activar/desactivar el seguimiento de volumen
+    toggleVolumeButton.addEventListener('click', function() {
+        isVolumeTracking = !isVolumeTracking; // Alternar el estado del seguimiento
+
+        // Cambiar el texto del botón según el estado
+        if (isVolumeTracking) {
+            toggleVolumeButton.textContent = 'Detener Seguimiento de Volumen';
+            // Iniciar el intervalo para actualizar el volumen continuamente
+            intervalId = setInterval(function() {
+                if (chart) {
+                    const currentIndex = chart.tooltip._active[0].dataIndex; // Obtener el índice del punto seleccionado en el gráfico
+                    if (currentIndex !== undefined) {
+                        const yValue = chart.data.datasets[0].data[currentIndex]; // Obtener el valor del eje Y
+                        const volume = Math.min(Math.max(yValue / 100, 0), 1); // Mapeo de 0 a 1
+                        audio.volume = volume; // Ajusta el volumen del audio
+                    }
+                }
+            }, 100); // Actualiza cada 100ms
+        } else {
+            toggleVolumeButton.textContent = 'Iniciar Seguimiento de Volumen';
+            // Detener el seguimiento de volumen
+            clearInterval(intervalId);
+        }
+    });
 });
