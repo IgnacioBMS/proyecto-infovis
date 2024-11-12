@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarProgresoAudio(limitIndex, max_valor) {
         const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
         const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
-        const currentValue = data[limitIndex] || 0; // Si es undefined, lo ponemos en 0
+        console.log(categoryData)
+        const currentValue = categoryData[limitIndex] || 0; // Si es undefined, lo ponemos en 0
         console.log(currentValue)
         const normalizedVolume = Math.min(Math.max(currentValue / max_valor, 0), 1); // Normalizamos el volumen entre 0 y 1
         audio.volume = normalizedVolume; // Ajustar el volumen según el valor actual
