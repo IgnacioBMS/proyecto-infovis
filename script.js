@@ -63,14 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 labels: precios,
                 datasets: [
                     {
-                        label: categoria,
-                        data: valores,
-                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
-                        borderWidth: 2,
-                        fill: false,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
-                    },
-                    {
                         label: 'Progreso del Audio',
                         data: new Array(valores.length).fill(null), // Inicialmente vacía
                         borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso
@@ -78,6 +70,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         fill: false,
                         pointBackgroundColor: 'rgba(255, 99, 132, 1)',
                         borderDash: [5, 5] // Línea discontinua para visibilidad
+                    },
+                    {
+                        label: categoria,
+                        data: valores,
+                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                     }
                 ]
             },
@@ -174,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function () {
         intervalId = setInterval(() => {
             if (chart) {
                 const totalPoints = chart.data.labels.length;
-                let currentIndex = Math.floor(audio.currentTime * velocidadFactor) % totalPoints;
                 actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(currentIndex / totalPoints);
             }
