@@ -3,7 +3,6 @@ let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
 let intervalId; // Para guardar la referencia del intervalo
-let currentIndex = 0; // Índice para el progreso del audio
 const velocidadFactor = 0.5; // Factor para ajustar el avance en el gráfico
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -35,9 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
-                reiniciarProgreso(); // Restablecer la línea de progreso
-                actualizarGrafico(categorySelect.value, data); // Actualizar el gráfico con la nueva categoría
-                pausarAudio(); // Pausar el audio al cambiar de categoría
+                reiniciarProgreso();
+                actualizarGrafico(categorySelect.value, data);
+                pausarAudio();
             });
         },
         error: function (err) {
@@ -65,21 +64,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 labels: precios,
                 datasets: [
                     {
-                        label: categoria,
-                        data: valores,
-                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
-                        borderWidth: 2,
-                        fill: false,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
-                    },
-                    {
                         label: 'Progreso del Audio',
                         data: new Array(valores.length).fill(null), // Inicialmente vacía
-                        borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso
+                        borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso (roja)
                         borderWidth: 2,
                         fill: false,
                         pointBackgroundColor: 'rgba(255, 99, 132, 1)',
                         borderDash: [5, 5] // Línea discontinua para visibilidad
+                    },
+                    {
+                        label: categoria,
+                        data: valores,
+                        borderColor: 'rgba(75, 192, 192, 1)', // Color original de la categoría
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                     }
                 ]
             },
@@ -117,14 +116,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 },
-                // Al hacer clic en un punto del gráfico, mostrar los detalles del auto
                 onClick: function (e, item) {
                     if (item.length > 0) {
-                        const index = item[0].index; // Obtener el índice del auto
-                        const car = data[index]; // Obtener los datos del auto
-    
-                        // Mostrar las especificaciones del auto
-                        carDetails.style.display = 'block'; // Hacer visible el contenedor
+                        const index = item[0].index;
+                        const car = data[index];
+
+                        carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
                             <strong>Nombre:</strong> ${car.Name}<br>
                             <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
@@ -140,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
-    }
+    }    
 
     // Mostrar detalles del auto
     function mostrarDetallesAuto(car) {
@@ -162,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleVolumeButton.addEventListener('click', function () {
         if (isPlaying) {
             pausarAudio();
+            reiniciarProgreso();
         } else {
             reproducirAudio();
         }
@@ -173,13 +171,16 @@ document.addEventListener('DOMContentLoaded', function () {
         volumeIcon.classList.remove('fa-play');
         volumeIcon.classList.add('fa-pause');
 
-        currentIndex = 0; // Reinicia el índice de progreso
+        let currentIndex = 0;
         intervalId = setInterval(() => {
             if (chart) {
                 const totalPoints = chart.data.labels.length;
                 actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(currentIndex / totalPoints);
-                currentIndex = (currentIndex + 1) % totalPoints; // Incrementar y ciclar el índice
+                currentIndex++;
+                if (currentIndex >= totalPoints) {
+                    currentIndex = 0; // Reinicia el progreso
+                }
             }
         }, 300); // Actualiza cada 300ms
     }
@@ -192,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    // Función para actualizar la línea de progreso del audio
     function actualizarProgresoAudio(limitIndex) {
         const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
         const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
@@ -211,21 +211,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Actualiza la línea de progreso con valores no nulos en el rango permitido
         for (let i = 0; i < progressData.length; i++) {
-            progressData[i] = i <= limitIndex ? chart.data.datasets[1].originalData[i] : null; // Muestra la línea de progreso en esos puntos
+            progressData[i] = i <= limitIndex ? chart.data.datasets[1].originalData[i] : null;
         }
 
         chart.update();
     }
 
-    // Función para reiniciar el progreso de la línea del audio
     function reiniciarProgreso() {
         if (chart) {
-            chart.data.datasets[1].data = new Array(chart.data.datasets[0].data.length).fill(null);
+            chart.data.datasets[0].data = new Array(chart.data.datasets[1].data.length).fill(null);
             chart.update();
         }
     }
 
-    // Función para ajustar el volumen según el progreso del gráfico
     function ajustarVolumen(progress) {
         audio.volume = progress; // Volumen aumenta de 0 a 1 según el progreso en el gráfico
     }
