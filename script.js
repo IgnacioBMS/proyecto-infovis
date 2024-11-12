@@ -47,15 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarGrafico(categoria, data) {
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
-
+    
         // Determinar valores mínimo y máximo con límite entre 10 y 100
         const minValor = Math.max(10, Math.min(...valores));
         const maxValor = Math.min(100, Math.max(...valores));
-
+    
         if (chart) {
             chart.destroy();
         }
-
+    
         const ctx = document.getElementById('line-chart').getContext('2d');
         chart = new Chart(ctx, {
             type: 'line',
@@ -114,10 +114,31 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }
                     }
+                },
+                // Al hacer clic en un punto del gráfico, mostrar los detalles del auto
+                onClick: function (e, item) {
+                    if (item.length > 0) {
+                        const index = item[0].index; // Obtener el índice del auto
+                        const car = data[index]; // Obtener los datos del auto
+    
+                        // Mostrar las especificaciones del auto
+                        carDetails.style.display = 'block'; // Hacer visible el contenedor
+                        carSpecs.innerHTML = `
+                            <strong>Nombre:</strong> ${car.Name}<br>
+                            <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
+                            <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
+                            <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
+                            <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
+                            <strong>Autonomía:</strong> ${car.Range_km} km<br>
+                            <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
+                            <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
+                            <strong>Puntuación:</strong> ${car.Score} / 100<br>
+                        `;
+                    }
                 }
             }
         });
-    }
+    }    
 
     // Mostrar detalles del auto
     function mostrarDetallesAuto(car) {
