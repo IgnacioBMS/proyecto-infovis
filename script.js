@@ -174,11 +174,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentIndex = 0;
         intervalId = setInterval(() => {
             if (chart) {
-                const totalPoints = chart.data.labels.length;
+                const maxValor = Math.max(...chart.data.datasets[1].data); // Tomamos el valor máximo en el eje Y
                 actualizarProgresoAudio(currentIndex);
-                ajustarVolumen(currentIndex / totalPoints);
+                ajustarVolumen(chart.data.datasets[1].data[currentIndex] / maxValor); // Ajusta el volumen según el valor relativo
                 currentIndex++;
-                if (currentIndex >= totalPoints) {
+                if (currentIndex >= chart.data.labels.length) {
                     currentIndex = 0; // Reinicia el progreso
                 }
             }
@@ -202,14 +202,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (i <= limitIndex) {
                 categoryData[i] = null; // Oculta el punto de la categoría
             } else if (!chart.data.datasets[1].originalData) {
-                // Almacena los datos originales si aún no lo has hecho
                 chart.data.datasets[1].originalData = [...chart.data.datasets[1].data];
             } else {
                 categoryData[i] = chart.data.datasets[1].originalData[i]; // Restaura el valor original
             }
         }
 
-        // Actualiza la línea de progreso con valores no nulos en el rango permitido
         for (let i = 0; i < progressData.length; i++) {
             progressData[i] = i <= limitIndex ? chart.data.datasets[1].originalData[i] : null;
         }
@@ -224,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function ajustarVolumen(progress) {
-        audio.volume = progress; // Volumen aumenta de 0 a 1 según el progreso en el gráfico
+    function ajustarVolumen(relativo) {
+        audio.volume = Math.min(Math.max(relativo, 0), 1);
     }
 });
