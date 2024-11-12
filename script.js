@@ -179,9 +179,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const totalPoints = chart.data.labels.length;
                 actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(currentIndex / totalPoints);
-                currentIndex = (currentIndex + 1) % totalPoints; // Incrementar y ciclar el índice
+    
+                if (currentIndex < totalPoints - 1) {
+                    currentIndex++;
+                } else {
+                    // Pausa al llegar al último punto
+                    clearInterval(intervalId); // Detiene la actualización temporalmente
+                    setTimeout(() => {
+                        // Reinicia el ciclo después de un retraso
+                        reproducirAudio();
+                    }, 2000); // Ajusta 2000 ms (2 segundos) al tiempo que deseas mantener el último punto
+                }
             }
-        }, 700); // Actualiza cada 300ms
+        }, 300); // Actualiza cada 300ms
     }
 
     function pausarAudio() {
@@ -194,12 +204,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para actualizar la línea de progreso del audio
     function actualizarProgresoAudio(limitIndex) {
-        const progressData = chart.data.datasets[1].data;
-        for (let i = 0; i < progressData.length; i++) {
-            progressData[i] = i <= limitIndex ? chart.data.datasets[0].data[i] : null;
+        const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
+    const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
+    
+    // Oculta la categoría en los puntos que cubre la línea de progreso
+    for (let i = 0; i < categoryData.length; i++) {
+        if (i <= limitIndex) {
+            categoryData[i] = null; // Oculta el punto de la categoría
+        } else {
+            categoryData[i] = chart.data.datasets[2].originalData[i]; // Restaura el valor original (deberías tener un array con los valores originales)
         }
-        chart.update();
     }
+
+    // Actualiza la línea de progreso
+    for (let i = 0; i < progressData.length; i++) {
+        progressData[i] = i <= limitIndex ? chart.data.datasets[2].originalData[i] : null; // Muestra la línea de progreso en esos puntos
+    }
+
+    chart.update();
+}
 
     // Función para reiniciar el progreso de la línea del audio
     function reiniciarProgreso() {
