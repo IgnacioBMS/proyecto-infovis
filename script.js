@@ -48,15 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarGrafico(categoria, data) {
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
-    
+
         // Determinar valores mínimo y máximo con límite entre 10 y 100
         const minValor = Math.max(10, Math.min(...valores));
         const maxValor = Math.min(100, Math.max(...valores));
-    
+
         if (chart) {
             chart.destroy();
         }
-    
+
         const ctx = document.getElementById('line-chart').getContext('2d');
         chart = new Chart(ctx, {
             type: 'line',
@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function () {
         intervalId = setInterval(() => {
             if (chart) {
                 const maxValor = Math.max(...chart.data.datasets[1].data); // Tomamos el valor máximo en el eje Y
-                console.log(maxValor)
-                actualizarProgresoAudio(currentIndex, maxValor);
+                actualizarProgresoAudio(currentIndex);
+                ajustarVolumen(chart.data.datasets[1].data[currentIndex] / maxValor); // Ajusta el volumen según el valor relativo
                 currentIndex++;
                 if (currentIndex >= chart.data.labels.length) {
                     currentIndex = 0; // Reinicia el progreso
@@ -193,14 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    function actualizarProgresoAudio(limitIndex, max_valor) {
+    function actualizarProgresoAudio(limitIndex) {
         const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
         const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
-        console.log(categoryData)
-        const currentValue = categoryData[limitIndex] || 0; // Si es undefined, lo ponemos en 0
-        console.log(currentValue)
-        const normalizedVolume = Math.min(Math.max(currentValue / max_valor, 0), 1); // Normalizamos el volumen entre 0 y 1
-        audio.volume = normalizedVolume; // Ajustar el volumen según el valor actual
 
         // Oculta la categoría en los puntos que cubre la línea de progreso
         for (let i = 0; i < categoryData.length; i++) {
@@ -226,5 +221,9 @@ document.addEventListener('DOMContentLoaded', function () {
             chart.update();
         }
     }
-    
+
+    function ajustarVolumen(relativo) {
+        audio.volume = Math.min(Math.max(relativo, 0), 1);
+        console.log(audio.volume)
+    }
 });
