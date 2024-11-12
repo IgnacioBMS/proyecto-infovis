@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
                 actualizarGrafico(categorySelect.value, data);
-                reiniciarProgreso(); // Reiniciar línea de progreso del audio
+                pausarAudio();
+                reiniciarProgreso();
             });
         },
         error: function (err) {
@@ -91,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     },
                     y: {
-                        min: minValor,
-                        max: maxValor,
+                        min: minValor - 10,
+                        max: maxValor + 10,
                         title: {
                             display: true,
                             text: categoria
@@ -160,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleVolumeButton.addEventListener('click', function () {
         if (isPlaying) {
             pausarAudio();
+            reiniciarProgreso();
         } else {
             reproducirAudio();
         }
