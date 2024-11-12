@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ajustarVolumen(currentIndex / totalPoints);
                 currentIndex = (currentIndex + 1) % totalPoints; // Incrementar y ciclar el índice
             }
-        }, 300); // Actualiza cada 300ms
+        }, 700); // Actualiza cada 300ms
     }
 
     function pausarAudio() {
