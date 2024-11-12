@@ -175,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
         intervalId = setInterval(() => {
             if (chart) {
                 const maxValor = Math.max(...chart.data.datasets[1].data); // Tomamos el valor máximo en el eje Y
+                console.log(maxValor)
                 actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(chart.data.datasets[1].data[currentIndex] / maxValor); // Ajusta el volumen según el valor relativo
                 currentIndex++;
@@ -223,7 +224,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function ajustarVolumen(relativo) {
-        audio.volume = Math.min(Math.max(relativo, 0), 1);
+        // Asegúrate de que relativo sea un número válido y esté en el rango de 0 a 1
+        if (isNaN(relativo) || relativo < 0 || relativo > 1) {
+            return; // Si no es un número válido, no hacer nada
+        }
+        audio.volume = relativo; // Asignamos el volumen solo si el valor es válido
         console.log(audio.volume)
     }
+    
 });
