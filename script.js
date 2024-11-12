@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
+                reiniciarProgreso();
                 actualizarGrafico(categorySelect.value, data);
                 pausarAudio();
-                reiniciarProgreso();
             });
         },
         error: function (err) {
