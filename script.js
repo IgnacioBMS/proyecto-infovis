@@ -3,6 +3,7 @@ let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
 let intervalId; // Para guardar la referencia del intervalo
+let currentIndex = 0; // Índice para el progreso del audio
 const velocidadFactor = 0.5; // Factor para ajustar el avance en el gráfico
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -34,9 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
-                reiniciarProgreso();
-                actualizarGrafico(categorySelect.value, data);
-                pausarAudio();
+                reiniciarProgreso(); // Restablecer la línea de progreso
+                actualizarGrafico(categorySelect.value, data); // Actualizar el gráfico con la nueva categoría
+                pausarAudio(); // Pausar el audio al cambiar de categoría
             });
         },
         error: function (err) {
@@ -64,6 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 labels: precios,
                 datasets: [
                     {
+                        label: categoria,
+                        data: valores,
+                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                    },
+                    {
                         label: 'Progreso del Audio',
                         data: new Array(valores.length).fill(null), // Inicialmente vacía
                         borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso
@@ -71,14 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         fill: false,
                         pointBackgroundColor: 'rgba(255, 99, 132, 1)',
                         borderDash: [5, 5] // Línea discontinua para visibilidad
-                    },
-                    {
-                        label: categoria,
-                        data: valores,
-                        borderColor: 'rgba(75, 192, 192, 1)', // Color original
-                        borderWidth: 2,
-                        fill: false,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                     }
                 ]
             },
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
-    }    
+    }
 
     // Mostrar detalles del auto
     function mostrarDetallesAuto(car) {
@@ -161,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleVolumeButton.addEventListener('click', function () {
         if (isPlaying) {
             pausarAudio();
-            reiniciarProgreso();
         } else {
             reproducirAudio();
         }
@@ -173,11 +173,13 @@ document.addEventListener('DOMContentLoaded', function () {
         volumeIcon.classList.remove('fa-play');
         volumeIcon.classList.add('fa-pause');
 
+        currentIndex = 0; // Reinicia el índice de progreso
         intervalId = setInterval(() => {
             if (chart) {
                 const totalPoints = chart.data.labels.length;
                 actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(currentIndex / totalPoints);
+                currentIndex = (currentIndex + 1) % totalPoints; // Incrementar y ciclar el índice
             }
         }, 300); // Actualiza cada 300ms
     }
