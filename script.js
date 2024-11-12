@@ -196,19 +196,22 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarProgresoAudio(limitIndex) {
         const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
         const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
-        
+
         // Oculta la categoría en los puntos que cubre la línea de progreso
         for (let i = 0; i < categoryData.length; i++) {
             if (i <= limitIndex) {
                 categoryData[i] = null; // Oculta el punto de la categoría
+            } else if (!chart.data.datasets[1].originalData) {
+                // Almacena los datos originales si aún no lo has hecho
+                chart.data.datasets[1].originalData = [...chart.data.datasets[1].data];
             } else {
-                categoryData[i] = chart.data.datasets[2].originalData[i]; // Restaura el valor original (deberías tener un array con los valores originales)
+                categoryData[i] = chart.data.datasets[1].originalData[i]; // Restaura el valor original
             }
         }
 
-        // Actualiza la línea de progreso
+        // Actualiza la línea de progreso con valores no nulos en el rango permitido
         for (let i = 0; i < progressData.length; i++) {
-            progressData[i] = i <= limitIndex ? chart.data.datasets[2].originalData[i] : null; // Muestra la línea de progreso en esos puntos
+            progressData[i] = i <= limitIndex ? chart.data.datasets[1].originalData[i] : null; // Muestra la línea de progreso en esos puntos
         }
 
         chart.update();
