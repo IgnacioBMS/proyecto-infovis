@@ -224,5 +224,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function ajustarVolumen(relativo) {
         audio.volume = Math.min(Math.max(relativo, 0), 1);
+        console.log(audio.volume)
     }
 });
