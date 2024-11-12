@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (chart) {
                 const maxValor = Math.max(...chart.data.datasets[1].data); // Tomamos el valor máximo en el eje Y
                 console.log(maxValor)
-                actualizarProgresoAudio(currentIndex, max_valor);
+                actualizarProgresoAudio(currentIndex, maxValor);
                 currentIndex++;
                 if (currentIndex >= chart.data.labels.length) {
                     currentIndex = 0; // Reinicia el progreso
