@@ -78,8 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso
                         borderWidth: 2,
                         fill: false,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        borderDash: [5, 5] // Línea discontinua para visibilidad
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)'
                     }
                 ]
             },
