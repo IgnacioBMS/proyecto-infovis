@@ -142,6 +142,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Mostrar detalles del auto
+    function mostrarDetallesAuto(car) {
+        carDetails.style.display = 'block';
+        carSpecs.innerHTML = `
+            <strong>Nombre:</strong> ${car.Name}<br>
+            <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
+            <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
+            <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
+            <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
+            <strong>Autonomía:</strong> ${car.Range_km} km<br>
+            <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
+            <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
+            <strong>Puntuación:</strong> ${car.Score} / 100<br>
+        `;
+    }
+
     // Control de audio y seguimiento
     toggleVolumeButton.addEventListener('click', function () {
         if (isPlaying) {
