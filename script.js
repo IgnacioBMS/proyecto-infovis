@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
-                const categoria = categorySelect.value;
-                actualizarGrafico(categoria, data);
+                actualizarGrafico(categorySelect.value, data);
+                reiniciarProgreso(); // Reiniciar línea de progreso del audio
             });
         },
         error: function (err) {
@@ -69,6 +69,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         borderWidth: 2,
                         fill: false,
                         pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                    },
+                    {
+                        label: 'Progreso del Audio',
+                        data: new Array(valores.length).fill(null), // Inicialmente vacía
+                        borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea de progreso
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        borderDash: [5, 5] // Línea discontinua para visibilidad
                     }
                 ]
             },
@@ -145,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (chart) {
                 const totalPoints = chart.data.labels.length;
                 let currentIndex = Math.floor(audio.currentTime * velocidadFactor) % totalPoints;
-                updateChartLine(currentIndex);
+                actualizarProgresoAudio(currentIndex);
                 ajustarVolumen(currentIndex / totalPoints);
             }
         }, 300); // Actualiza cada 300ms
@@ -159,12 +168,21 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    // Función para actualizar la línea eliminando los puntos aún no reproducidos
-    function updateChartLine(limitIndex) {
-        chart.data.datasets[0].data = chart.data.datasets[0].data.map((value, index) =>
-            index <= limitIndex ? value : null
-        );
+    // Función para actualizar la línea de progreso del audio
+    function actualizarProgresoAudio(limitIndex) {
+        const progressData = chart.data.datasets[1].data;
+        for (let i = 0; i < progressData.length; i++) {
+            progressData[i] = i <= limitIndex ? chart.data.datasets[0].data[i] : null;
+        }
         chart.update();
+    }
+
+    // Función para reiniciar el progreso de la línea del audio
+    function reiniciarProgreso() {
+        if (chart) {
+            chart.data.datasets[1].data = new Array(chart.data.datasets[0].data.length).fill(null);
+            chart.update();
+        }
     }
 
     // Función para ajustar el volumen según el progreso del gráfico
