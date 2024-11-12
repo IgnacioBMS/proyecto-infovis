@@ -176,8 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (chart) {
                 const maxValor = Math.max(...chart.data.datasets[1].data); // Tomamos el valor máximo en el eje Y
                 console.log(maxValor)
-                actualizarProgresoAudio(currentIndex);
-                ajustarVolumen(chart.data.datasets[1].data[currentIndex] / maxValor); // Ajusta el volumen según el valor relativo
+                actualizarProgresoAudio(currentIndex, maxValor);
                 currentIndex++;
                 if (currentIndex >= chart.data.labels.length) {
                     currentIndex = 0; // Reinicia el progreso
@@ -194,9 +193,12 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(intervalId);
     }
 
-    function actualizarProgresoAudio(limitIndex) {
+    function actualizarProgresoAudio(limitIndex, max_valor) {
         const progressData = chart.data.datasets[0].data; // Datos de la línea de progreso
         const categoryData = chart.data.datasets[1].data; // Datos de la línea de la categoría
+        const currentValue = categoryData[limitIndex] || 0; // Si es undefined, lo ponemos en 0
+        const normalizedVolume = Math.min(Math.max(currentValue / max_valor, 0), 1); // Normalizamos el volumen entre 0 y 1
+        audio.volume = normalizedVolume; // Ajustar el volumen según el valor actual
 
         // Oculta la categoría en los puntos que cubre la línea de progreso
         for (let i = 0; i < categoryData.length; i++) {
@@ -221,15 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
             chart.data.datasets[0].data = new Array(chart.data.datasets[1].data.length).fill(null);
             chart.update();
         }
-    }
-
-    function ajustarVolumen(relativo) {
-        // Asegúrate de que relativo sea un número válido y esté en el rango de 0 a 1
-        if (isNaN(relativo) || relativo < 0 || relativo > 1) {
-            return; // Si no es un número válido, no hacer nada
-        }
-        audio.volume = relativo; // Asignamos el volumen solo si el valor es válido
-        console.log(audio.volume)
     }
     
 });
