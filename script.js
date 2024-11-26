@@ -20,12 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = results.data.map(item => ({
                 Name: item.Name,
                 Price: parseInt(item.PriceinEurope),
-                Battery_kWh: parseFloat(item.Battery_kWh),
-                Acceleration_sec: parseFloat(item.Acceleration_sec),
                 TopSpeed_kmh: parseFloat(item.TopSpeed_kmh),
                 Range_km: parseFloat(item.Range_km),
                 Efficiency_Whkm: parseFloat(item.Efficiency_Whkm),
-                NumberofSeats: parseInt(item.NumberofSeats),
                 Score: Math.trunc(parseFloat(item.Score) * 100),
             }));
 
@@ -125,12 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         carSpecs.innerHTML = `
                             <strong>Nombre:</strong> ${car.Name}<br>
                             <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
-                            <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
-                            <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
                             <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
                             <strong>Autonomía:</strong> ${car.Range_km} km<br>
                             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
-                            <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
                             <strong>Puntuación:</strong> ${car.Score} / 100<br>
                         `;
                     }
@@ -145,12 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
         carSpecs.innerHTML = `
             <strong>Nombre:</strong> ${car.Name}<br>
             <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
-            <strong>Batería:</strong> ${car.Battery_kWh} kWh<br>
-            <strong>Aceleración:</strong> ${car.Acceleration_sec} segundos<br>
             <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
             <strong>Autonomía:</strong> ${car.Range_km} km<br>
             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
-            <strong>Número de Asientos:</strong> ${car.NumberofSeats}<br>
             <strong>Puntuación:</strong> ${car.Score} / 100<br>
         `;
     }
