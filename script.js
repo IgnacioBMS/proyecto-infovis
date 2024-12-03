@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
-                        moverServo(car.Score * 10);
+                        moverServo(car.Score * 10, car.Range_km * 10);
 
                         carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
