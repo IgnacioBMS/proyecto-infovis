@@ -1,4 +1,4 @@
-<script type="module" src="arduino\arduino.js"></script>
+import moverServo from "arduino\arduino.js"
 
 
 let chart; // Referencia al gráfico
