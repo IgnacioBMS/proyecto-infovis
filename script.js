@@ -1,3 +1,5 @@
+import { controlarServo } from 'arduino/main.js';
+
 let chart; // Referencia al gráfico
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
@@ -117,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
+                        enviarAArduino(car);
 
                         carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
@@ -144,6 +147,13 @@ document.addEventListener('DOMContentLoaded', function () {
             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
             <strong>Puntuación:</strong> ${car.Score} / 100<br>
         `;
+    }
+
+    function enviarAArduino(car) {
+        const pin = 6; // Pin del servo
+        const value = Math.min(Math.max(car.Score, 0), 180); // Normaliza el valor a rango de servo
+        console.log(`Enviando a Arduino: pin ${pin}, valor ${value}`);
+        Arduino.contServoWrite({ pin, value });
     }
 
     // Control de audio y seguimiento
