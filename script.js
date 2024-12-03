@@ -1,4 +1,7 @@
+import moverServo from 'arduino\interface.js' 
+
 let chart; // Referencia al gráfico
+
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
@@ -117,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
+                        moverServo(car.Score * 10);
 
                         carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
@@ -127,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
                             <strong>Puntuación:</strong> ${car.Score} / 100<br>
                         `;
+                    
                     }
                 }
             }
