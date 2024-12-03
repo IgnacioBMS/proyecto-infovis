@@ -1,4 +1,4 @@
-import Arduino from 'arduino.js';
+import Arduino from './arduino.js';
 
 Arduino.start();
 

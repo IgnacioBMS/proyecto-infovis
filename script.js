@@ -1,5 +1,3 @@
-import { controlarServo } from 'arduino/main.js';
-
 let chart; // Referencia al gráfico
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
@@ -47,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para actualizar el gráfico según la categoría seleccionada
     function actualizarGrafico(categoria, data) {
+        console.log('Creando gráfico para categoría:', categoria);
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
 
