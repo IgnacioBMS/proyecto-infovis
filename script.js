@@ -1,6 +1,3 @@
-import moverServo from "./arduino/arduino.js"
-
-
 let chart; // Referencia al gráfico
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
