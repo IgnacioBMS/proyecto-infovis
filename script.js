@@ -5,12 +5,16 @@ let isPlaying = false; // Estado para controlar si el audio está en reproducci�
 let intervalId; // Para guardar la referencia del intervalo
 const velocidadFactor = 0.5; // Factor para ajustar el avance en el gráfico
 
+let port; // Variable para almacenar la conexión al puerto serie
+let writer; // Variable para escribir datos al puerto serie
+
 document.addEventListener('DOMContentLoaded', function () {
     const carDetails = document.getElementById('car-details');
     const carSpecs = document.getElementById('car-specs');
     const toggleVolumeButton = document.getElementById('toggle-volume');
     const volumeIcon = document.getElementById('volume-icon');
     const categorySelect = document.getElementById('category-select');
+    const connectButton = document.getElementById('connect-button');
 
     // Cargar el CSV
     Papa.parse('datos/database.csv', {
@@ -40,6 +44,20 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         error: function (err) {
             console.error('Error al cargar el archivo CSV:', err);
+        }
+    });
+
+    // Función para conectar con el Arduino usando la Web Serial API
+    connectButton.addEventListener('click', async () => {
+        try {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
+
+            // Habilita el botón para enviar comandos
+            console.log('Conectado al Arduino');
+            writer = port.writable.getWriter();
+        } catch (err) {
+            console.error('Error al conectar con Arduino:', err);
         }
     });
 
@@ -120,21 +138,38 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
-
-                        carDetails.style.display = 'block';
-                        carSpecs.innerHTML = `
-                            <strong>Nombre:</strong> ${car.Name}<br>
-                            <strong>Precio:</strong> €${car.Price.toLocaleString()}<br>
-                            <strong>Velocidad Máxima:</strong> ${car.TopSpeed_kmh} km/h<br>
-                            <strong>Autonomía:</strong> ${car.Range_km} km<br>
-                            <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
-                            <strong>Puntuación:</strong> ${car.Score} / 100<br>
-                        `;
-                        enviarAArduino(car);
+                        mostrarDetallesAuto(car)
+                        // Mover el servo según el punto seleccionado en el gráfico
+                        const servoPosition = mapToServoRange(car.Price); // Mapea el precio del auto a un rango de 0 a 500
+                        sendToArduino(servoPosition);
+                        setTimeout(() => {
+                            console.log('Tiempo de envío de datos al Arduino finalizado');
+                        }, 30000); // 30 segundos = 30000 ms
                     }
                 }
             }
         });
+    }
+
+    // Función para mapear el precio a un valor de 0 a 500
+    function mapToServoRange(price) {
+        const minPrice = Math.min(...data.map(item => item.Price));
+        const maxPrice = Math.max(...data.map(item => item.Price));
+
+        // Mapeamos el precio a un rango de 0 a 500 para el servo
+        return Math.floor(((price - minPrice) / (maxPrice - minPrice)) * 500);
+    }
+
+    // Función para enviar el valor del servo al Arduino
+    async function sendToArduino(value) {
+        if (writer) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(value.toString() + '\n');
+            await writer.write(data);
+            console.log('Valor enviado al Arduino:', value);
+        } else {
+            console.error('No hay conexión con el Arduino.');
+        }
     }
 
     // Mostrar detalles del auto
@@ -148,13 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
             <strong>Puntuación:</strong> ${car.Score} / 100<br>
         `;
-    }
-
-    function enviarAArduino(car) {
-        const pin = 6; // Pin del servo
-        const value = Math.min(Math.max(car.Score, 0), 180); // Normaliza el valor a rango de servo
-        console.log(`Enviando a Arduino: pin ${pin}, valor ${value}`);
-        controlarServo({ pin, value }); // Asegúrate de que el método en Arduino esté correctamente definido
     }
 
     // Control de audio y seguimiento
