@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 import moverServo from "./arduino/arduino.js"
 
 
-=======
->>>>>>> b4a1165b1fba4e8287a0d49057289f3b1fade4f7
 let chart; // Referencia al gráfico
+
 let audio = new Audio('audio/audio.mp3'); // Ruta al archivo de audio
 audio.loop = true; // Se activa el bucle para que el audio se reproduzca continuamente
 let isPlaying = false; // Estado para controlar si el audio está en reproducción o pausa
@@ -32,10 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 Score: Math.trunc(parseFloat(item.Score) * 100),
             }));
 
-            if (data.length > 0) {
-                actualizarGrafico('Score', data);
-                mostrarDetallesAuto(data[0]);
-            }
+            actualizarGrafico('Score', data);
+            mostrarDetallesAuto(data[0]);
 
             // Evento para cambiar de categoría
             categorySelect.addEventListener('change', function () {
@@ -51,18 +47,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para actualizar el gráfico según la categoría seleccionada
     function actualizarGrafico(categoria, data) {
-        console.log('Creando gráfico para categoría:', categoria);
         const precios = data.map(item => item.Price);
         const valores = data.map(item => item[categoria]);
-
+    
         // Determinar valores mínimo y máximo con límite entre 10 y 100
         const minValor = Math.max(10, Math.min(...valores));
         const maxValor = Math.min(100, Math.max(...valores));
-
+    
         if (chart) {
             chart.destroy();
         }
-
+    
         const ctx = document.getElementById('line-chart').getContext('2d');
         chart = new Chart(ctx, {
             type: 'line',
@@ -126,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
+                        moverServo(car.Score * 10, car.Range_km * 10);
 
                         carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
@@ -136,12 +132,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
                             <strong>Puntuación:</strong> ${car.Score} / 100<br>
                         `;
-                        enviarAArduino(car);
+                    
                     }
                 }
             }
         });
-    }
+    }    
 
     // Mostrar detalles del auto
     function mostrarDetallesAuto(car) {
@@ -154,13 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
             <strong>Puntuación:</strong> ${car.Score} / 100<br>
         `;
-    }
-
-    function enviarAArduino(car) {
-        const pin = 6; // Pin del servo
-        const value = Math.min(Math.max(car.Score, 0), 180); // Normaliza el valor a rango de servo
-        console.log(`Enviando a Arduino: pin ${pin}, valor ${value}`);
-        controlarServo({ pin, value }); // Asegúrate de que el método en Arduino esté correctamente definido
     }
 
     // Control de audio y seguimiento
@@ -208,10 +197,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // Oculta la categoría en los puntos que cubre la línea de progreso
         for (let i = 0; i < categoryData.length; i++) {
             if (i <= limitIndex) {
-                progressData[i] = categoryData[i]; // Sincroniza la línea de progreso con la categoría
+                categoryData[i] = null; // Oculta el punto de la categoría
+            } else if (!chart.data.datasets[1].originalData) {
+                // Almacena los datos originales si aún no lo has hecho
+                chart.data.datasets[1].originalData = [...chart.data.datasets[1].data];
             } else {
-                progressData[i] = null; // Restaura la línea de progreso
+                categoryData[i] = chart.data.datasets[1].originalData[i]; // Restaura el valor original
             }
+        }
+
+        // Actualiza la línea de progreso con valores no nulos en el rango permitido
+        for (let i = 0; i < progressData.length; i++) {
+            progressData[i] = i <= limitIndex ? chart.data.datasets[1].originalData[i] : null;
         }
 
         chart.update();
