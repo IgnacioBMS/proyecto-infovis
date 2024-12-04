@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
-                        enviarAArduino(car);
 
                         carDetails.style.display = 'block';
                         carSpecs.innerHTML = `
@@ -131,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <strong>Gasto:</strong> ${car.Efficiency_Whkm} Wh/km<br>
                             <strong>Puntuación:</strong> ${car.Score} / 100<br>
                         `;
+                        enviarAArduino(car);
                     }
                 }
             }
