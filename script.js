@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
             await port.open({ baudRate: 9600 });
 
             // Habilita el botón para enviar comandos
-            console.log('Conectado al Arduino');
             writer = port.writable.getWriter();
+            console.log('Conectado al Arduino');
         } catch (err) {
             console.error('Error al conectar con Arduino:', err);
         }
