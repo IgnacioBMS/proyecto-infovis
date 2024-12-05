@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function sendToArduino(value) {
         if (writer) {
             const encoder = new TextEncoder();
-            const data = encoder.encode(value.toString() + '\n');
+            const data = encoder.encode(`PIN 6 ${value}\n`);
             await writer.write(data);
             console.log('Valor enviado al Arduino:', value);
         } else {
