@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         setTimeout(() => {
             console.log('Tiempo de envío de datos al Arduino finalizado');
-        }, 30000); // 30 segundos = 30000 ms
+        }, 10000); // 30 segundos = 30000 ms
     }
 
     // Mostrar detalles del auto
