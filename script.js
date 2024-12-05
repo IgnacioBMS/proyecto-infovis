@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         setTimeout(() => {
             console.log('Tiempo de envío de datos al Arduino finalizado');
+            sendToArduino(0)
         }, 10000); // 30 segundos = 30000 ms
     }
 
