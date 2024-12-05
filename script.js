@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
+                        console.log(car)
                         mostrarDetallesAuto(car)
                         // Mover el servo según el punto seleccionado en el gráfico
                         const servoPosition = mapToServoRange(car.Price); // Mapea el precio del auto a un rango de 0 a 500
