@@ -138,10 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.length > 0) {
                         const index = item[0].index;
                         const car = data[index];
-                        console.log(car)
                         mostrarDetallesAuto(car)
                         // Mover el servo según el punto seleccionado en el gráfico
-                        const servoPosition = mapToServoRange(car.Price); // Mapea el precio del auto a un rango de 0 a 500
+                        const servoPosition = mapToServoRange(data, car.TopSpeed_kmh); // Mapea el precio del auto a un rango de 0 a 500
                         sendToArduino(servoPosition);
                         setTimeout(() => {
                             console.log('Tiempo de envío de datos al Arduino finalizado');
@@ -153,12 +152,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para mapear el precio a un valor de 0 a 500
-    function mapToServoRange(price) {
-        const minPrice = Math.min(...data.map(item => item.Price));
-        const maxPrice = Math.max(...data.map(item => item.Price));
+    function mapToServoRange(data, velocidad) {
+        const validSpeeds = data.map(item => parseFloat(item.TopSpeed_kmh)).filter(speed => !isNaN(speed));
+        const minSpeed = Math.min(...validSpeeds);
+        const maxSpeed = Math.max(...validSpeeds);
 
         // Mapeamos el precio a un rango de 0 a 500 para el servo
-        return Math.floor(((price - minPrice) / (maxPrice - minPrice)) * 500);
+        return Math.floor(((velocidad - minSpeed) / (maxSpeed - minSpeed)) * 500);
+        
     }
 
     // Función para enviar el valor del servo al Arduino
