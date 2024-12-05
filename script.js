@@ -142,9 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Mover el servo según el punto seleccionado en el gráfico
                         const servoPosition = mapToServoRange(data, car.TopSpeed_kmh); // Mapea el precio del auto a un rango de 0 a 500
                         sendToArduino(servoPosition);
-                        setTimeout(() => {
-                            console.log('Tiempo de envío de datos al Arduino finalizado');
-                        }, 30000); // 30 segundos = 30000 ms
                     }
                 }
             }
@@ -172,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.error('No hay conexión con el Arduino.');
         }
+        setTimeout(() => {
+            console.log('Tiempo de envío de datos al Arduino finalizado');
+        }, 30000); // 30 segundos = 30000 ms
     }
 
     // Mostrar detalles del auto
